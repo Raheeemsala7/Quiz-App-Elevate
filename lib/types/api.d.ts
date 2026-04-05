@@ -1,13 +1,19 @@
 
 
 declare type SuccessResponse<T> = {
-    success: true
-    data: T
+    status: true
+    code: number;
+    message?: string
+    payload: T
 }
 declare type ErrorResponse = {
-    success: false
-    status: number
-    message: string
+    status: false
+    code: number;
+    message?: string;
+    errors?: Array<{
+        path: string;
+        message: string;
+    }>
 }
 
-declare type ApiResponse<T> = SuccessResponse<T> | ErrorResponse
+declare type IApiResponse<T> = SuccessResponse<T> | ErrorResponse
