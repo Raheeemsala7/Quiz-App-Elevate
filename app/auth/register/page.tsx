@@ -1,87 +1,148 @@
-"use client"
-import { Button } from "@/components/ui/button"
-import { Field, FieldError, FieldLabel } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import Link from "next/link"
-import { Controller, useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { RegistrationFormType, registrationSchema } from "@/lib/zodSchema"
+"use client";
+import { Button } from "@/components/ui/button";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+    RegistrationFormStep1Type,
+    registrationStep1Schema,
+} from "@/lib/zodSchema";
+import { ArrowUpLeftSquare, ChevronRight, Diamond, DiamondIcon, Loader2 } from "lucide-react";
+import { sendEmailVerification } from "@/features/auth/hooks";
+import {
+    Stepper,
+    StepperContent,
+    StepperIndicator,
+    StepperItem,
+    StepperNav,
+    StepperPanel,
+    StepperSeparator,
+    StepperTrigger,
+} from "@/components/reui/stepper";
+import { useState } from "react";
 
 
-
+const steps = [
+    { step: 1, label: "Account", icon: DiamondIcon },
+    { step: 2, label: "Email", icon: DiamondIcon },
+    { step: 3, label: "Security", icon: DiamondIcon },
+    { step: 4, label: "Finish", icon: DiamondIcon },
+];
 
 const RegisterPage = () => {
-
-
-    const form = useForm<RegistrationFormType>({
-        resolver: zodResolver(registrationSchema),
+    const [step, setStep] = useState(2);
+    const { mutateAsync, isPending } = sendEmailVerification();
+    const form = useForm<RegistrationFormStep1Type>({
+        resolver: zodResolver(registrationStep1Schema),
         defaultValues: {
-            name:"",
             email: "",
-            password: ""
         },
-    })
+    });
 
+    async function onSubmit(data: RegistrationFormStep1Type) {
+        console.log(data);
 
-    function onSubmit(data: RegistrationFormType) {
-        console.log(data)
+        await mutateAsync(data.email);
+
+        // setStep(2);
     }
     return (
         <>
+            {step === 1 ? (
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <Controller
+                        name="email"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                            <Field>
+                                <FieldLabel className="font-mono">Email</FieldLabel>
+                                <Input
+                                    className="rounded-sm px-4 py-6 border border-[#E5E7EB] rounded-0 font-mono"
+                                    type="email"
+                                    placeholder="user@example.com"
+                                    {...field}
+                                />
+                                {fieldState.invalid && (
+                                    <FieldError
+                                        className="text-red-500"
+                                        errors={[fieldState.error]}
+                                    />
+                                )}
+                            </Field>
+                        )}
+                    />
 
-            {/* Header */}
-            <div className="text-center mb-6">
-                <h1 className="text-3xl font-bold  mb-2">تسجيل حساب جديد</h1>
-                <p className="text-muted-foreground text-sm">ادخل تفاصيلك لتسجيل حساب جديد</p>
-            </div>
+                    <Button
+                        disabled={isPending}
+                        type="submit"
+                        className="w-full bg-[#EFF6FF] text-center font-mono text-[#1F2937] py-5"
+                        variant={"secondary"}
+                    >
+                        {isPending ? (
+                            <>
+                                Sending verification email...{" "}
+                                <Loader2 className="size-4 animate-spin " />
+                            </>
+                        ) : (
+                            <>
+                                Next <ChevronRight className="size-4" />
+                            </>
+                        )}
+                    </Button>
+
+                    <div className="flex gap-1 justify-center">
+                        <span>Already have an account? </span>
+                        <Link
+                            href={"/auth/login"}
+                            className="text-sm text-gray-400 hover:text-[#1F2937] hover:underline transition-all text-center block"
+                        >
+                            Login
+                        </Link>
+                    </div>
+                </form>
+            ) : step === 2 ? (
+                <div>
+                    <Stepper defaultValue={step} className="w-full max-w-2xl mx-auto">
+                        <StepperNav>
+                            {steps.map(({ step: s, label, icon: Icon }) => (
+                                <StepperItem key={s} step={s} >
+                                    <StepperTrigger>
+                                        <StepperIndicator
+                                            className={`group !bg-transparent
+                                                    transition-all duration-200 size-6
+                                                    data-[state=active]:!bg-blue-100 data-[state=active]:shadow-[0px_0px_3px_6px_#DBEAFE]
+                                                `}
+                                        >
+                                            <div>
+                                                <Icon className="bg-transparent group-data-[state=completed]:!stroke-blue-600 group-data-[state=active]:!stroke-blue-600 group-data-[state=completed]:!fill-blue-600 group-data-[state=active]:!fill-blue-600 group-data-[state=inactive]:!stroke-blue-600" size={25} />
+                                            </div>
+                                        </StepperIndicator>
+                                    </StepperTrigger>
+
+                                    {/* Line */}
+                                    {s !== steps.length && (
+                                        <StepperSeparator className="border-b-2 border-dashed border-blue-600 group-data-[state=completed]/step:border-solid" />
+                                    )}
+                                </StepperItem>
+                            ))}
+                        </StepperNav>
+
+
+                    </Stepper>
+
+                    <h4 className="text-3xl font-bold my-6">Create Account</h4>
+
+                </div>
+
+            ) : (
+                "[[["
+            )}
 
             {/* Form */}
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <Controller
-                    name="name"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                        <Field>
-                            <FieldLabel>الاسم</FieldLabel>
-                            <Input className="rounded-sm" type="text" {...field} />
-                            {fieldState.invalid && <FieldError className="text-red-500" errors={[fieldState.error]} />}
-                        </Field>
-                    )}
-                />
-                <Controller
-                    name="email"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                        <Field>
-                            <FieldLabel>الايميل</FieldLabel>
-                            <Input className="rounded-sm" type="email" {...field} />
-                            {fieldState.invalid && <FieldError className="text-red-500" errors={[fieldState.error]} />}
-                        </Field>
-                    )}
-                />
-
-                <Controller
-                    name="password"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                        <Field>
-                            <FieldLabel>كلمة المرور</FieldLabel>
-                            <Input className="rounded-sm" type="password" {...field} />
-                            {fieldState.invalid && <FieldError className="text-red-500" errors={[fieldState.error]} />}
-                        </Field>
-                    )}
-                />
-
-                <Button type="submit" className="w-full quiz-gradient" variant={"destructive"}>
-                    Submit
-                </Button>
-
-                <Link href={"/auth/register"} className="text-sm text-gray-400 hover:text-white hover:underline transition-all text-center block">
-                    هل لديك حساب ؟ تسجيل الدخول
-                </Link>
-            </form>
         </>
-    )
-}
+    );
+};
 
-export default RegisterPage
+export default RegisterPage;
