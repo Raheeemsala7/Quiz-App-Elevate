@@ -22,6 +22,7 @@ import {
     StepperTrigger,
 } from "@/components/reui/stepper";
 import { useState } from "react";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 
 const steps = [
@@ -133,6 +134,29 @@ const RegisterPage = () => {
                     </Stepper>
 
                     <h4 className="text-3xl font-bold my-6">Create Account</h4>
+
+                    <h6 className="text-blue-600">Verify OTP</h6>
+
+                    <p>Please enter the 6-digits code we have sent to:</p>
+                    <div >
+                        user@example.com <span onClick={() => setStep(1)} className="text-blue-600 cursor-pointer underline"> Edit</span>
+                    </div>
+
+                    <div className="flex justify-center mt-5">
+                        <InputOTP maxLength={6} defaultValue="123456" className="mx-auto font-mono">
+                        <InputOTPGroup >
+                            <InputOTPSlot className="!font-mono" index={0} />
+                            <InputOTPSlot className="!font-mono" index={1} />
+                            <InputOTPSlot className="!font-mono" index={2} />
+                            <InputOTPSlot className="!font-mono" index={3} />
+                            <InputOTPSlot className="!font-mono" index={4} />
+                            <InputOTPSlot className="!font-mono" index={5} />
+                        </InputOTPGroup>
+                    </InputOTP>
+                    </div>
+
+
+                    <button className="w-full mt-4 hover:bg-[#EFF6FF] text-center font-mono text-[#1F2937] py-2" type="submit"> Verify</button>
 
                 </div>
 
