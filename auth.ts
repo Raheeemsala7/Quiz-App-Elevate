@@ -15,15 +15,15 @@ export const authOptions: NextAuthOptions = {
             },
             authorize: async (credentials) => {
 
-                if (credentials?.token && credentials?.user) {
-                    const user = JSON.parse(credentials.user)
-                    return {
-                        id: user.id,
-                        token: credentials.token,
-                        user
-                    }
-                }
-                
+                // if (credentials?.token && credentials?.user) {
+                //     const user = JSON.parse(credentials.user)
+                //     return {
+                //         id: user.id,
+                //         token: credentials.token,
+                //         user
+                //     }
+                // }
+
                 const res = await fetch(`${process.env.API_URL}/auth/login`, {
                     method: "POST",
                     body: JSON.stringify({ username: credentials?.username, password: credentials?.password }),
@@ -53,8 +53,10 @@ export const authOptions: NextAuthOptions = {
 
     callbacks: {
         jwt: async ({ token, user }) => {
-            token.token = user.token
-            token.user = user.user
+            if (user) {
+                token.token = user.token
+                token.user = user.user
+            }
             return token
         },
         session: async ({ session, token }) => {
