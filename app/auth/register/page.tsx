@@ -6,20 +6,20 @@ import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+    createPasswordSchema,
+    CreatePasswordType,
     RegistrationFormStep1Type,
     RegistrationFormStep3Type,
     registrationStep1Schema,
     registrationStep3Schema,
 } from "@/lib/zodSchema";
-import { ArrowUpLeftSquare, ChevronRight, Diamond, DiamondIcon, Loader2 } from "lucide-react";
-import { sendEmailVerification, verifyCodeEmail } from "@/features/auth/hooks";
+import { ChevronRight, DiamondIcon, Loader2 } from "lucide-react";
+import { register, sendEmailVerification, verifyCodeEmail } from "@/features/auth/hooks";
 import {
     Stepper,
-    StepperContent,
     StepperIndicator,
     StepperItem,
     StepperNav,
-    StepperPanel,
     StepperSeparator,
     StepperTrigger,
 } from "@/components/reui/stepper";
@@ -27,6 +27,7 @@ import { useState } from "react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { toast } from "sonner";
 import CountryPhoneSelector from "./_components/country-phone-selector";
+import Step4PasswordForm from "./_components/Step4PasswordForm";
 
 
 const steps = [
@@ -37,10 +38,21 @@ const steps = [
 ];
 
 const RegisterPage = () => {
-    const [step, setStep] = useState(3);
+    const [step, setStep] = useState(1);
     const [email, setEmail] = useState("");
+ 
+    const [userInfo, setUserInfo] = useState<RegistrationFormStep3Type>({
+        firstName: "",
+        lastName: "",
+        username: "",
+        countryCode: "EG",
+        phone: "",
+        email: "",
+    });
+
     const { mutateAsync, isPending } = sendEmailVerification();
     const { mutateAsync: verifyCodeEmailAsync, isPending: verifyCodeEmailIsPending, data: verifyCodeEmailData } = verifyCodeEmail();
+
     const form = useForm<RegistrationFormStep1Type>({
         resolver: zodResolver(registrationStep1Schema),
         defaultValues: {
@@ -57,6 +69,8 @@ const RegisterPage = () => {
             phone: "",
         },
     });
+
+
 
     async function onSubmit(data: RegistrationFormStep1Type) {
         console.log(data);
@@ -75,7 +89,13 @@ const RegisterPage = () => {
 
     async function onRegisterFormStep3(data: RegistrationFormStep3Type) {
         console.log(data);
+        setUserInfo({
+            ...data,
+            email
+        });
+        setStep(4);
     }
+
 
 
 
@@ -83,6 +103,8 @@ const RegisterPage = () => {
         <>
             {step === 1 ? (
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <h4 className="text-3xl font-bold mb-4">Create Account</h4>
+
                     <Controller
                         name="email"
                         control={form.control}
@@ -197,7 +219,9 @@ const RegisterPage = () => {
                                 </div>
 
 
-                                <button className="w-full mt-4 hover:bg-[#EFF6FF] text-center font-mono text-[#1F2937] py-2" type="submit"> Verify</button>
+                                <button disabled={verifyCodeEmailIsPending} className="w-full mt-4 hover:bg-[#EFF6FF] text-center font-mono text-[#1F2937] py-2" type="submit">
+                                    {verifyCodeEmailIsPending ? 'Verifying...' : 'Verify'}
+                                </button>
 
                             </div>
 
@@ -338,7 +362,12 @@ const RegisterPage = () => {
 
                                 </form>
                             </div>
+                        ) : step === 4 ? (
+                            <Step4PasswordForm
+                                userInfo={userInfo}
+                            />
                         ) : "ff"
+
                         }
                     </div>
 

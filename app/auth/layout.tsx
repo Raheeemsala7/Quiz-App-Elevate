@@ -75,7 +75,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
 
 
                 <div className="flex justify-center items-center">
-                    <div className="w-full max-w-md">
+                    <div className="w-full max-w-md px-4">
                         {children}
 
                     </div>
