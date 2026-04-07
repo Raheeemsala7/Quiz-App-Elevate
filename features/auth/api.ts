@@ -19,14 +19,14 @@ export const sendEmailVerificationApi = async (email: string) => {
     return res.json();
 }
 
-export const verifyCodeEmailApi = async (code: string , email: string) => {
+export const verifyCodeEmailApi = async ({email, code}: {email: string, code: string}) => {
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/confirm-email-verification`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email ,code }),
+        body: JSON.stringify({ email, code }),
     });
 
     if (!res.ok) {

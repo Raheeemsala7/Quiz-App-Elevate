@@ -1,0 +1,28 @@
+export const COUNTRIES = [
+    { code: "EG", name: "Egypt", dialCode: "+20", flag: "🇪🇬" },
+    { code: "SA", name: "Saudi Arabia", dialCode: "+966", flag: "🇸🇦" },
+    { code: "AE", name: "UAE", dialCode: "+971", flag: "🇦🇪" },
+    { code: "KW", name: "Kuwait", dialCode: "+965", flag: "🇰🇼" },
+    { code: "QA", name: "Qatar", dialCode: "+974", flag: "🇶🇦" },
+    { code: "BH", name: "Bahrain", dialCode: "+973", flag: "🇧🇭" },
+    { code: "OM", name: "Oman", dialCode: "+968", flag: "🇴🇲" },
+    { code: "JO", name: "Jordan", dialCode: "+962", flag: "🇯🇴" },
+    { code: "LB", name: "Lebanon", dialCode: "+961", flag: "🇱🇧" },
+    { code: "SY", name: "Syria", dialCode: "+963", flag: "🇸🇾" },
+    { code: "IQ", name: "Iraq", dialCode: "+964", flag: "🇮🇶" },
+    { code: "YE", name: "Yemen", dialCode: "+967", flag: "🇾🇪" },
+    { code: "LY", name: "Libya", dialCode: "+218", flag: "🇱🇾" },
+    { code: "TN", name: "Tunisia", dialCode: "+216", flag: "🇹🇳" },
+    { code: "DZ", name: "Algeria", dialCode: "+213", flag: "🇩🇿" },
+    { code: "MA", name: "Morocco", dialCode: "+212", flag: "🇲🇦" },
+    { code: "SD", name: "Sudan", dialCode: "+249", flag: "🇸🇩" },
+    { code: "US", name: "United States", dialCode: "+1", flag: "🇺🇸" },
+    { code: "GB", name: "United Kingdom", dialCode: "+44", flag: "🇬🇧" },
+    { code: "DE", name: "Germany", dialCode: "+49", flag: "🇩🇪" },
+    { code: "FR", name: "France", dialCode: "+33", flag: "🇫🇷" },
+    { code: "TR", name: "Turkey", dialCode: "+90", flag: "🇹🇷" },
+    { code: "IN", name: "India", dialCode: "+91", flag: "🇮🇳" },
+    { code: "PK", name: "Pakistan", dialCode: "+92", flag: "🇵🇰" },
+] as const
+
+export type Country = (typeof COUNTRIES)[number];

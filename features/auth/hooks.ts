@@ -9,15 +9,20 @@ export const sendEmailVerification = () => {
 
     return useMutation({
         mutationKey: ["sendEmailVerification"],
-        mutationFn:  sendEmailVerificationApi,
+        mutationFn: sendEmailVerificationApi,
     })
 
 }
+
+interface VerifyCodeInput {
+    email: string
+    code: string
+}
 export const verifyCodeEmail = () => {
 
-    return useMutation({
+    return useMutation<SuccessResponse<void>, ErrorResponse, VerifyCodeInput>({
         mutationKey: ["verifyCodeEmail"],
-        mutationFn:  verifyCodeEmailApi,
+        mutationFn: verifyCodeEmailApi,
     })
 
 }
