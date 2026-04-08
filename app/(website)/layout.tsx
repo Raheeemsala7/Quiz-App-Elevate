@@ -2,13 +2,23 @@ import { AppSidebar } from '@/components/sidebar/app-sidebar'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import React from 'react'
 
-const layoutDashboard = ({ children }: { children: React.ReactNode }) => {
+interface IProps {
+    children: React.ReactNode
+    admin : React.ReactNode
+    user: React.ReactNode
+}
+
+const layoutDashboard = ({ children , admin , user }: IProps) => {
+    const isAdmin = false
     return (
         <SidebarProvider>
             <AppSidebar />
             <main>
                 <SidebarTrigger />
-                {children}
+
+                {!isAdmin ? admin : user }
+
+                {/* {children} */}
             </main>
         </SidebarProvider>
     )
