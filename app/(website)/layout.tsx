@@ -16,7 +16,7 @@ const layoutDashboard = ({ children , admin , user }: IProps) => {
             <main>
                 <SidebarTrigger />
 
-                {!isAdmin ? admin : user }
+                {isAdmin ? admin : user }
 
                 {/* {children} */}
             </main>
