@@ -8,13 +8,17 @@ import { cookies } from "next/headers";
 
 export const getDiplomasApi = async () => {
 
-    const cookiesStore = await cookies()
-    const token = cookiesStore.get(process.env.NEXT_AUTH_SESSION_COOKIE_NAME!)?.value
+    // const cookiesStore = await cookies()
+    // const token = cookiesStore.get("next-auth.session-token")?.value
+    // console.log(token)
+
+    const session = await getServerSession(authOptions)
+    const token = session
     console.log(token)
 
 
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diplomas`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diplomas?page=1&limit=20`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -27,8 +31,8 @@ export const getDiplomasApi = async () => {
 
 
     if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || "Something went wrong");
+        console.log(data)
+        // throw new Error(data.message || "Something went wrong");
     }
 
     return data

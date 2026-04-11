@@ -33,7 +33,7 @@ export const authOptions: NextAuthOptions = {
                 })
 
                 const data: IApiResponse<IAuthResponse> = await res.json()
-
+                console.log("data login" , data)
                 if (!data.status) {
                     throw Error(data.message)
                 }

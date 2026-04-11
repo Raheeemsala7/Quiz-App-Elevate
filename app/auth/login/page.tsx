@@ -26,6 +26,7 @@ const page = () => {
       password: data.password,
       redirect : false
     })
+    
     if (!res?.ok) {
       toast.error(res?.error || "Login failed")
       return
