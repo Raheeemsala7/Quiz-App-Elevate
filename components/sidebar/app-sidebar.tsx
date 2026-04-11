@@ -7,6 +7,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarTrigger,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
 
@@ -14,6 +15,7 @@ export function AppSidebar() {
     return (
         <Sidebar>
             <SidebarHeader >
+                <SidebarTrigger /> 
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton

@@ -13,8 +13,8 @@ const layoutDashboard = ({ children , admin , user }: IProps) => {
     return (
         <SidebarProvider>
             <AppSidebar />
-            <main>
-                <SidebarTrigger />
+            <main className='w-full'>
+                {/* <SidebarTrigger /> */}
 
                 {isAdmin ? admin : user }
 

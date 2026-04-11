@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { register } from "@/features/auth/hooks";
+import { register } from "@/lib/features/auth/hooks";
 import { createPasswordSchema, CreatePasswordType } from "@/lib/zodSchema"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";

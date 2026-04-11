@@ -6,15 +6,13 @@ import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-    createPasswordSchema,
-    CreatePasswordType,
     RegistrationFormStep1Type,
     RegistrationFormStep3Type,
     registrationStep1Schema,
     registrationStep3Schema,
 } from "@/lib/zodSchema";
 import { ChevronRight, DiamondIcon, Loader2 } from "lucide-react";
-import { register, sendEmailVerification, verifyCodeEmail } from "@/features/auth/hooks";
+import {  sendEmailVerification, verifyCodeEmail } from "@/lib/features/auth/hooks";
 import {
     Stepper,
     StepperIndicator,
