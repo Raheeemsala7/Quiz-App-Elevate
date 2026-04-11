@@ -1,10 +1,14 @@
 import { getDiplomasApi } from '@/lib/features/diplomas/api'
+import { useDiplomasInfinite } from '@/lib/features/diplomas/hooks'
 import {  LucideGraduationCap } from 'lucide-react'
+import DiplomasList from './_components/diplomas-list'
 
-const userPage = async () => {
+const userPage =  () => {
 
-  const data = await getDiplomasApi()
-  console.log(data)
+
+
+  // const data = await getDiplomasApi()
+  // console.log(data)
   
   return (
     <main className="w-full">
@@ -12,6 +16,8 @@ const userPage = async () => {
         <LucideGraduationCap className='text-white size-12' />
         <h4 className='text-3xl text-white font-semibold'>Diplomas</h4>
       </div>
+
+      <DiplomasList />
     </main>
   )
 }

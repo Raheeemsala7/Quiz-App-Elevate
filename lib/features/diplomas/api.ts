@@ -1,41 +1,24 @@
-import { authOptions } from "@/auth";
 import { IDiplomasResponse } from "@/lib/types/diploma";
-import { getServerSession } from "next-auth";
-import { cookies } from "next/headers";
+import { getNextAuthToken } from "@/lib/util/auth.util";
 
 
 
+export const getDiplomasApi = async (page: number = 1) : Promise<IApiResponse<IDiplomasResponse>> => {
 
-export const getDiplomasApi = async () => {
+    const token = await getNextAuthToken()
 
-    // const cookiesStore = await cookies()
-    // const token = cookiesStore.get("next-auth.session-token")?.value
-    // console.log(token)
-
-    const session = await getServerSession(authOptions)
-    const token = session
-    console.log(token)
-
-
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diplomas?page=1&limit=20`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diplomas?page=${page}&limit=3`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
+            "Authorization": `Bearer ${token?.token}`,
         },
     });
 
-    const data: IApiResponse<IDiplomasResponse | ErrorResponse> = await res.json();
-    console.log(data)
-
-
+    const data: IApiResponse<IDiplomasResponse> = await res.json();
+    console.log("data : " , data)
     if (!res.ok) {
-        console.log(data)
-        // throw new Error(data.message || "Something went wrong");
+        throw new Error(data.message || "Something went wrong");
     }
-
-    return data
-
-
+    return data as IApiResponse<IDiplomasResponse>;
 }

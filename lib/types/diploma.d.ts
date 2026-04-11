@@ -3,11 +3,12 @@ export interface IDiploma {
   title: string;
   description: string;
   image: string;
-  createdAt: string; // or Date if you parse it
-  updatedAt: string; // or Date
+  immutable: boolean; 
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface IPagination {
+export interface IDiplomaMetadata {
   page: number;
   limit: number;
   total: number;
@@ -16,5 +17,5 @@ export interface IPagination {
 
 export interface IDiplomasResponse {
   data: IDiploma[];
-  pagination: IPagination;
+  metadata: IDiplomaMetadata; 
 }
