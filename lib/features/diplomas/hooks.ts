@@ -22,7 +22,6 @@ export const useDiplomasInfinite = () => {
 
                 const { page, totalPages } = lastPage.payload.metadata; // ✅ أضفنا .metadata
 
-                    console.log("page:", page, "totalPages:", totalPages)
 
 
                 if (page < totalPages) {

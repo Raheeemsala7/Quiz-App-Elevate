@@ -16,7 +16,6 @@ export const getDiplomasApi = async (page: number = 1) : Promise<IApiResponse<ID
     });
 
     const data: IApiResponse<IDiplomasResponse> = await res.json();
-    console.log("data : " , data)
     if (!res.ok) {
         throw new Error(data.message || "Something went wrong");
     }

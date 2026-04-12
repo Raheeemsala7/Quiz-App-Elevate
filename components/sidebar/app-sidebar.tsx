@@ -10,12 +10,20 @@ import {
     SidebarTrigger,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
+import LogoApp from "../icons/Logo"
 
 export function AppSidebar() {
     return (
-        <Sidebar>
+        <Sidebar className="!bg-[#EFF6FF] px-4 py-8" >
+
+            <SidebarHeader>
+                <Link href="/">
+                    <LogoApp className="" />
+                </Link>
+            </SidebarHeader>
+
             <SidebarHeader >
-                <SidebarTrigger /> 
+                <SidebarTrigger />
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton

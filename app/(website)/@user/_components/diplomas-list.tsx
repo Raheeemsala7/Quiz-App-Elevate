@@ -22,19 +22,17 @@ export default function DiplomasGrid() {
 
     useEffect(() => {
         if (inView && hasNextPage && !isFetchingNextPage) {
+            console.log("fetchNextPage" , new Date().getTime())
             fetchNextPage()
         }
     }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
-    console.log(data)
-    // في الـ component
     const allDiplomas = data?.pages.flatMap((page) => {
-        if (!("payload" in page)) return []  // ✅ type guard
+        if (!("payload" in page)) return []  
         return page.payload.data ?? []
     }) ?? []
 
-    console.log("data?.pages:", data?.pages)
-    console.log("allDiplomas:", allDiplomas)
+
 
 
     if (isLoading) {
@@ -58,7 +56,7 @@ export default function DiplomasGrid() {
 
 
             {/* Grid */}
-            <div className="grid grid-cols-3 gap-3 p-3">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 p-3">
                 {allDiplomas.map((diploma, index) => (
                     <DiplomaCard key={diploma.id} diploma={diploma} index={index} />
                 ))}
