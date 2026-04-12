@@ -1,5 +1,6 @@
 import { IDiploma } from "@/lib/types/diploma"
 import Image from "next/image"
+import Link from "next/link"
 
 
 export default function DiplomaCard({
@@ -10,7 +11,8 @@ export default function DiplomaCard({
     index: number
 }) {
     return (
-        <div
+        <Link
+            href={`/${diploma.id}/${diploma.title}`}
             className="relative overflow-hidden aspect-[3/3.7] lg:aspect-[3/2.2] cursor-pointer group"
             style={{
                 animation: `fadeInUp 0.4s ease ${(index % 6) * 0.06}s both`,
@@ -21,7 +23,7 @@ export default function DiplomaCard({
                 src={diploma.image}
                 alt={diploma.title}
                 fill
-                unoptimized  // ✅ بيخلي next/image يبعت الـ request من البراوزر مباشرة مش من السيرفر
+                unoptimized
                 className="object-fill transition-transform duration-500 rounded-none group-hover:scale-105"
                 sizes="(max-width: 768px) 33vw, 250px"
             />
@@ -37,6 +39,6 @@ export default function DiplomaCard({
                     {diploma.description}
                 </p>
             </div>
-        </div>
+        </Link>
     )
 }

@@ -1,3 +1,4 @@
+import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -9,32 +10,36 @@ const authRoutes = new Set([
     '/auth/login',
     '/auth/register',
 ]);
-export default function proxy(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
 
     let pathname = req.nextUrl.pathname
 
 
-    let token = req.cookies.get(process.env.NEXT_AUTH_SESSION_COOKIE_NAME!)?.value
+    // let token = req.cookies.get(process.env.NEXT_AUTH_SESSION_COOKIE_NAME!)?.value
+
+      const token = await getToken({ req }); 
 
     if (privateRoutes.has(pathname)) {
-        if (token) {
-            return NextResponse.next()
+        if (!token?.token) {
+            const redirectUrl = new URL('/auth/login', req.nextUrl.origin);
+            redirectUrl.searchParams.set('callbackUrl', pathname)
+            return NextResponse.redirect(redirectUrl)
         }
-        const redirectUrl = new URL('/auth/login', req.nextUrl.origin);
-        redirectUrl.searchParams.set('callbackUrl', pathname)
-        return NextResponse.redirect(redirectUrl)
+        return NextResponse.next()
     }
 
     if (authRoutes.has(pathname)) {
-        if (token) {
+        if (token?.token) {
             return NextResponse.redirect(new URL("/", req.nextUrl))
         }
 
-        const redirectUrl = new URL('/', req.nextUrl.origin);
+        // const redirectUrl = new URL('/auth/login', req.nextUrl.origin);
 
-        redirectUrl.searchParams.set('callbackUrl', pathname)
+        // redirectUrl.searchParams.set('callbackUrl', pathname)
 
-        return NextResponse.redirect(redirectUrl)
+        // return NextResponse.redirect(redirectUrl)
+
+        return NextResponse.next(); 
 
     }
 
