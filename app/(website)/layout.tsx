@@ -13,7 +13,7 @@ const layoutDashboard = ({ children , admin , user }: IProps) => {
     return (
         <SidebarProvider>
             <AppSidebar />
-            <main className='w-full bg-[#F9FAFB]'>
+            <main className='w-full bg-[#F9FAFB] p-4'>
 
                 {isAdmin ? admin : user }
 

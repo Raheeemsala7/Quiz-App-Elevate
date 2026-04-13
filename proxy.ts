@@ -17,7 +17,7 @@ export default async function proxy(req: NextRequest) {
 
     // let token = req.cookies.get(process.env.NEXT_AUTH_SESSION_COOKIE_NAME!)?.value
 
-      const token = await getToken({ req }); 
+    const token = await getToken({ req });
 
     if (privateRoutes.has(pathname)) {
         if (!token?.token) {
@@ -39,7 +39,7 @@ export default async function proxy(req: NextRequest) {
 
         // return NextResponse.redirect(redirectUrl)
 
-        return NextResponse.next(); 
+        return NextResponse.next();
 
     }
 
