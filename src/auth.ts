@@ -1,5 +1,5 @@
 import Credentials from "next-auth/providers/credentials";
-import { IAuthResponse } from "./lib/types/auth";
+import { IAuthResponse } from "./features/lib/types/auth";
 import { NextAuthOptions } from "next-auth";
 
 

@@ -8,7 +8,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarTrigger,
-} from "@/src/components/ui/sidebar"
+} from "@/src/features/components/ui/sidebar"
 import Link from "next/link"
 import LogoApp from "../icons/Logo"
 

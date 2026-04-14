@@ -1,4 +1,4 @@
-import { IDiploma } from "@/src/lib/types/diploma"
+import { IDiploma } from "@/src/features/lib/types/diploma"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -19,14 +19,15 @@ export default function DiplomaCard({
             }}
         >
             {/* Image */}
-            <Image
-                src={diploma.image}
-                alt={diploma.title}
-                fill
-                unoptimized
-                className="object-fill transition-transform duration-500 rounded-none group-hover:scale-105"
-                sizes="(max-width: 768px) 33vw, 250px"
-            />
+
+                <Image
+                    src={diploma.image}
+                    alt={diploma.title}
+                    fill
+                    unoptimized
+                    className="object-fill transition-transform duration-500 rounded-none group-hover:scale-105"
+                    sizes="(max-width: 768px) 33vw, 250px"
+                />
 
 
 

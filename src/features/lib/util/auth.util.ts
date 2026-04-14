@@ -9,6 +9,8 @@ export async function getNextAuthToken() {
   const token = cookiesStore.get(process.env.NEXT_AUTH_SESSION_COOKIE_NAME!)?.value
 
 
+  console.log(token)
+
 
   try {
     const jwt = decode({

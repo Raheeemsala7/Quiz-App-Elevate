@@ -1,10 +1,10 @@
-import { getExamsApi } from "@/src/lib/features/exams/api";
+import { getExamsApi } from "@/src/features/lib/features/exams/api";
 import { ArrowLeft, ArrowRight, BookOpenCheck, ChevronLeft, MoveRight } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import ExamsList from "../_components/exams-list";
-import ErrorBoundary from "@/src/components/shared/error-boundary";
-import { IExam } from "@/src/lib/types/exam";
+import ErrorBoundary from "@/src/features/components/shared/error-boundary";
+import { IExam } from "@/src/features/lib/types/exam";
 
 interface IPageProps {
   params: Promise<{

@@ -1,4 +1,4 @@
-import { IExam } from '@/src/lib/types/exam'
+import { IExam } from '@/src/features/lib/types/exam'
 import { MoveRight } from 'lucide-react'
 import Image from 'next/image'
 
@@ -6,33 +6,35 @@ import Image from 'next/image'
 const ExamsList = async ({ examsData }: { id: string, examsData: IExam[] }) => {
 
 
-    
+
 
 
     return (
         <div className="space-y-4 mt-8">
             {examsData.map((exam) => (
-                <div key={exam.id} className="relative bg-[#EFF6FF] border border-gray-200 shadow-sm px-3 py-2 w-full  
-            flex items-center gap-3 group hover:shadow-md transition">
+                <div key={exam.id} className="relative bg-[#EFF6FF] border border-gray-200 shadow-sm p-4 w-full  
+            flex items-center gap-4 group hover:shadow-md transition">
 
-                    <div className="relative w-19 h-19 p-2 border border-[#EFF6FF]">
+                    <div className="relative flex justify-center items-center size-25 bg-[#DBEAFE] border border-[#8EC5FF]">
                         <Image
                             src={`https://exam-app.elevate-bootcamp.cloud${exam.image}`}
-                            fill
-                            className="object-cover"
+                            width={75}
+                            height={75}
+                            className="object-fill h-19"
                             alt={exam.title}
+                        // sizes="(max-width: 768px) 33vw, 75px"
                         />
                     </div>
 
                     <div className="flex-1">
                         <div className="flex items-start justify-between">
-                            <h2 className="text-xl font-semibold text-gray-800">{exam.title}</h2>
+                            <h2 className="text-xl font-semibold text-blue-600 font-mono">{exam.title}</h2>
                             <div className="flex items-center gap-4 text-gray-400 text-sm">
                                 <span>⏱ {exam.duration} minutes</span>
                                 {/* <span>❓ {exam.} Questions</span> */}
                             </div>
                         </div>
-                        <p className="text-gray-500 text-sm mt-1">
+                        <p className="text-gray-500 text-sm mt-1 line-clamp-3 font-mono">
                             {exam.description}
                         </p>
                     </div>

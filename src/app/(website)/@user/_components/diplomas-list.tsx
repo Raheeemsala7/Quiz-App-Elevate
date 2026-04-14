@@ -4,9 +4,9 @@
 import { useEffect, useRef } from "react"
 import { useInView } from "react-intersection-observer"
 import Image from "next/image"
-import { useDiplomasInfinite } from "@/src/lib/features/diplomas/hooks"
+import { useDiplomasInfinite } from "@/src/features/lib/features/diplomas/hooks"
 import DiplomaCard from "./diploma-card"
-import { IDiploma } from "@/src/lib/types/diploma"
+import { IDiploma } from "@/src/features/lib/types/diploma"
 
 export default function DiplomasGrid() {
     const {

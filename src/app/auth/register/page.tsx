@@ -10,9 +10,9 @@ import {
     RegistrationFormStep3Type,
     registrationStep1Schema,
     registrationStep3Schema,
-} from "@/src/lib/zodSchema";
+} from "@/src/features/lib/zodSchema";
 import { ChevronRight, DiamondIcon, Loader2 } from "lucide-react";
-import {  sendEmailVerification, verifyCodeEmail } from "@/src/lib/features/auth/hooks";
+import {  sendEmailVerification, verifyCodeEmail } from "@/src/features/lib/features/auth/hooks";
 import {
     Stepper,
     StepperIndicator,

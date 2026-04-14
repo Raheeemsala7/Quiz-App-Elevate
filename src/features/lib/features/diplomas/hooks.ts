@@ -2,7 +2,7 @@
 
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query"
 import { getDiplomasApi } from "./api"
-import { IDiplomasResponse } from "@/src/lib/types/diploma";
+import { IDiplomasResponse } from "@/src/features/lib/types/diploma";
 
 
 
