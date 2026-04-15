@@ -1,7 +1,7 @@
 "use client"
 
 import { useMutation } from "@tanstack/react-query"
-import { registerApi, sendEmailVerificationApi, verifyCodeEmailApi } from "./api"
+import { registerApi, sendEmailVerificationApi, verifyCodeEmailApi } from "../apis/auth.api"
 import { IRegisterType } from "@/src/shared/lib/interface"
 import { IAuthResponse } from "@/src/features/auth/types/auth"
 

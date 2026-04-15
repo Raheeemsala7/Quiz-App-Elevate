@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { register } from "@/src/shared/lib/features/auth/hooks";
+import { register } from "@/src/features/auth/hooks/hooks";
 import { createPasswordSchema, CreatePasswordType } from "@/src/shared/lib/zodSchema"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";

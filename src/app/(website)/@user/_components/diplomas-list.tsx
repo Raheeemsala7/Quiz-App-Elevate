@@ -4,7 +4,7 @@
 import { useEffect, useRef } from "react"
 import { useInView } from "react-intersection-observer"
 import Image from "next/image"
-import { useDiplomasInfinite } from "@/src/shared/lib/features/diplomas/hooks"
+import { useDiplomasInfinite } from "@/src/features/diploma/hooks/hooks"
 import DiplomaCard from "./diploma-card"
 import { IDiploma } from "@/src/shared/lib/types/diploma"
 

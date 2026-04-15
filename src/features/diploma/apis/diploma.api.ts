@@ -1,5 +1,5 @@
 import { IDiplomasResponse } from "@/src/shared/lib/types/diploma";
-import { getNextAuthToken } from "@/src/shared/lib/util/auth.util";
+import { getNextAuthToken } from "@/src/features/auth/util/auth.util";
 
 
 

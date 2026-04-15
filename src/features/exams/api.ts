@@ -1,5 +1,5 @@
 import { IExamsResponse } from "@/src/shared/lib/types/exam";
-import { getNextAuthToken } from "@/src/shared/lib/util/auth.util";
+import { getNextAuthToken } from "@/src/features/auth/util/auth.util";
 
 export const getExamsApi = async (
     diplomaId: string,

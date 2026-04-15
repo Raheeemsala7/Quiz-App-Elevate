@@ -12,7 +12,7 @@ import {
     registrationStep3Schema,
 } from "@/src/shared/lib/zodSchema";
 import { ChevronRight, DiamondIcon, Loader2 } from "lucide-react";
-import {  sendEmailVerification, verifyCodeEmail } from "@/src/shared/lib/features/auth/hooks";
+import {  sendEmailVerification, verifyCodeEmail } from "@/src/features/auth/hooks/hooks";
 import {
     Stepper,
     StepperIndicator,

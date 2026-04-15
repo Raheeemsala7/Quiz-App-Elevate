@@ -1,4 +1,4 @@
-import { getExamsApi } from "@/src/shared/lib/features/exams/api";
+import { getExamsApi } from "@/src/features/exams/api";
 import { ArrowLeft, ArrowRight, BookOpenCheck, ChevronLeft, MoveRight } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
