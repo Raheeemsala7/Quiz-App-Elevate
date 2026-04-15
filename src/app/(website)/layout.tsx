@@ -1,6 +1,6 @@
 
-import { AppSidebar } from '@/src/features/components/sidebar/app-sidebar'
-import { SidebarProvider } from '@/src/features/components/ui/sidebar'
+import { AppSidebar } from '@/src/shared/components/sidebar/app-sidebar'
+import { SidebarProvider } from '@/src/shared/components/ui/sidebar'
 import React from 'react'
 
 interface IProps {

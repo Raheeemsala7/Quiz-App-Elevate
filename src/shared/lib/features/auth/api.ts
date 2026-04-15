@@ -1,7 +1,7 @@
 
 "use server"
 
-import { IRegisterType } from "@/src/features/lib/interface";
+import { IRegisterType } from "@/src/shared/lib/interface";
 
 export const sendEmailVerificationApi = async (email: string) => {
 

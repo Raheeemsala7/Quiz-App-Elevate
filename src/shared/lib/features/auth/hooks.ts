@@ -2,8 +2,8 @@
 
 import { useMutation } from "@tanstack/react-query"
 import { registerApi, sendEmailVerificationApi, verifyCodeEmailApi } from "./api"
-import { IRegisterType } from "@/src/features/lib/interface"
-import { IAuthResponse } from "@/src/features/lib/types/auth"
+import { IRegisterType } from "@/src/shared/lib/interface"
+import { IAuthResponse } from "@/src/features/auth/types/auth"
 
 
 

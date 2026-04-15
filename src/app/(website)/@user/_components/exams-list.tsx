@@ -1,4 +1,4 @@
-import { IExam } from '@/src/features/lib/types/exam'
+import { IExam } from '@/src/shared/lib/types/exam'
 import { MoveRight } from 'lucide-react'
 import Image from 'next/image'
 
