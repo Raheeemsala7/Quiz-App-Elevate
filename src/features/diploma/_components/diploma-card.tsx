@@ -1,6 +1,8 @@
 import { IDiploma } from "@/src/shared/lib/types/diploma"
 import Image from "next/image"
 import Link from "next/link"
+import slugify from "slugify";
+
 
 
 export default function DiplomaCard({
@@ -12,7 +14,7 @@ export default function DiplomaCard({
 }) {
     return (
         <Link
-            href={`/${diploma.id}/${diploma.title}`}
+            href={`/${diploma.id}/${slugify(diploma.title, { lower: true })}`}
             className="relative overflow-hidden h-112 p-2.5 cursor-pointer group"
             style={{
                 animation: `fadeInUp 0.4s ease ${(index % 6) * 0.06}s both`,

@@ -1,4 +1,4 @@
-import { IPagination } from './exam.d';
+import { IPagination } from '../../../features/exams/types/exam';
 
 
 declare type SuccessResponse<T> = {
