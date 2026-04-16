@@ -1,4 +1,4 @@
-import { COUNTRIES } from "@/src/shared/lib/constant";
+import { COUNTRIES } from "@/src/shared/constant";
 import { ChevronDown, Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ReactCountryFlag from "react-country-flag";

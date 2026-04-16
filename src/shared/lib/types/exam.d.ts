@@ -9,14 +9,3 @@ export interface IExam {
   updatedAt: string;
 }
 
-export interface IPagination {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-}
-
-export interface IExamsResponse {
-  data: IExam[];
-  pagination: IPagination;
-}

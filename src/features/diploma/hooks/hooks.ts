@@ -1,35 +1,44 @@
 "use client"
 
-import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query"
-import { IDiplomasResponse } from "@/src/shared/lib/types/diploma";
-import { getDiplomasApi } from "../apis/diploma.api";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { DIPLOMA_KEYS } from "../apis/diploma.options";
+import { useSearchParams } from "next/navigation";
+import { DEFAULT_LIMIT_DIPLOMA } from "@/src/shared/constant/api.constant";
+import { IApiResponse, IPagination } from "@/src/shared/lib/types/api";
+import { IDiploma } from "@/src/shared/lib/types/diploma";
+
+
 
 
 
 export const useDiplomasInfinite = () => {
-    return useInfiniteQuery
-    <IApiResponse<IDiplomasResponse>,
-        ErrorResponse,
-        InfiniteData<IApiResponse<IDiplomasResponse>>, // ✅ Selected data
-        string[],
-        number
-        > ({
-            queryKey: ["diplomas"],
-            queryFn: ({ pageParam = 1 }) => getDiplomasApi(pageParam),
-            initialPageParam: 1,
+    // Search params
+    const searchParams = useSearchParams()
 
-            getNextPageParam: (lastPage) => {
-                if (!lastPage.status) return undefined;
+    // Variables
+    const page = Number(searchParams.get("page")) || 1
+    const limit = Number(searchParams.get("limit")) || DEFAULT_LIMIT_DIPLOMA
 
-                const { page, totalPages } = lastPage.payload.metadata; // ✅ أضفنا .metadata
+    return useInfiniteQuery({
+        queryKey: DIPLOMA_KEYS.list(page, limit),
+        queryFn: async ({ pageParam }) => {
 
+            const res = await fetch(`/api/diploma/?page=${pageParam}&limit=${limit}`)
 
+            const data: IApiResponse<IPagination<IDiploma>> = await res.json()
 
-                if (page < totalPages) {
-                    return page + 1;
-                }
+            if (!data.status) {
+                throw new Error(data.message || "Error")
+            }
 
-                return undefined;
-            },
-        });
+            return data.payload
+        },
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            if (lastPage.metadata.page === lastPage.metadata.totalPages) {
+                return undefined
+            }
+            return lastPage.metadata.page + 1
+        }
+    })
 };

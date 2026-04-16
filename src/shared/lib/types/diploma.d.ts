@@ -1,4 +1,4 @@
-export interface IDiploma {
+export interface IDiploma extends ITimeStamp {
   id: string;
   title: string;
   description: string;
@@ -8,14 +8,3 @@ export interface IDiploma {
   updatedAt: string;
 }
 
-export interface IDiplomaMetadata {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-}
-
-export interface IDiplomasResponse {
-  data: IDiploma[];
-  metadata: IDiplomaMetadata; 
-}

@@ -13,7 +13,7 @@ export default function DiplomaCard({
     return (
         <Link
             href={`/${diploma.id}/${diploma.title}`}
-            className="relative overflow-hidden aspect-[3/3.7] lg:aspect-[3/2.2] cursor-pointer group"
+            className="relative overflow-hidden h-112 p-2.5 cursor-pointer group"
             style={{
                 animation: `fadeInUp 0.4s ease ${(index % 6) * 0.06}s both`,
             }}
@@ -32,8 +32,8 @@ export default function DiplomaCard({
 
 
             {/* Info */}
-            <div className="absolute bottom-0 left-0 right-0 p-2.5 bg-[#155DFCBF] w-[95%] mx-auto mb-2 ">
-                <h3 className="text-white font-mono font-bold text-xl leading-tight font-mono mb-1">
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-[#155DFCBF] w-[95%] mx-auto mb-2  space-y-1">
+                <h3 className="text-white font-mono font-bold text-xl leading-tight mb-1">
                     {diploma.title}
                 </h3>
                 <p className="text-white/75 text-sm font-mono ">

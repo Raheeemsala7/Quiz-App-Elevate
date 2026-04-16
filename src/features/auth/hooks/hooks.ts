@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query"
 import { registerApi, sendEmailVerificationApi, verifyCodeEmailApi } from "../apis/auth.api"
 import { IRegisterType } from "@/src/shared/lib/interface"
 import { IAuthResponse } from "@/src/features/auth/types/auth"
+import { IErrorResponse, SuccessResponse } from "@/src/shared/lib/types/api"
 
 
 
@@ -20,7 +21,7 @@ interface VerifyCodeInput {
     code: string
 }
 export const verifyCodeEmail = () => {
-    return useMutation<SuccessResponse<void>, ErrorResponse, VerifyCodeInput>({
+    return useMutation<SuccessResponse<void>, IErrorResponse, VerifyCodeInput>({
         mutationKey: ["verifyCodeEmail"],
         mutationFn: verifyCodeEmailApi,
     })
@@ -28,7 +29,7 @@ export const verifyCodeEmail = () => {
 
 
 export const register = () => {
-    return useMutation<SuccessResponse<IAuthResponse>, ErrorResponse, IRegisterType>({
+    return useMutation<SuccessResponse<IAuthResponse>, IErrorResponse, IRegisterType>({
         mutationKey: ["register"],
         mutationFn: registerApi,
     })

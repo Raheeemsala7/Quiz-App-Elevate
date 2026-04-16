@@ -1,14 +1,11 @@
 
+import DiplomasList from '@/src/features/diploma/_components/diplomas-list'
 import {  LucideGraduationCap } from 'lucide-react'
-import DiplomasList from './_components/diplomas-list'
 
 const userPage =  () => {
 
 
 
-  // const data = await getDiplomasApi()
-  // console.log(data)
-  
   return (
     <main className="w-full">
       <div className="bg-blue-600 flex items-center gap-3 p-4  w-full">
