@@ -5,10 +5,15 @@ import { useExamsInfinite } from '../hooks/hooks'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useMemo } from 'react'
 import ExamsListSkeleton from './exams-list-skeleton'
+import Link from 'next/link'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 
 const ExamsList = ({ id }: { id: string }) => {
 
+    const pathName = usePathname()
+
+    console.log(pathName)
 
     const { data, isLoading, isError, fetchNextPage, hasNextPage } = useExamsInfinite(id)
 
@@ -22,6 +27,7 @@ const ExamsList = ({ id }: { id: string }) => {
     if (isError) {
         return <p>Error...</p>
     }
+
 
 
 
@@ -69,10 +75,10 @@ const ExamsList = ({ id }: { id: string }) => {
                         </div>
 
                         <div className="absolute bottom-4 right-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-                            <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-3 py-1  shadow">
+                            <Link href={`${pathName}/${exam.id}/${exam.title}`}  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-3 py-1  shadow">
                                 <span>START </span>
                                 <MoveRight className="size-5 text-white" />
-                            </button>
+                            </Link >
                         </div>
 
                     </div>
