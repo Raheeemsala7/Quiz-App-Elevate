@@ -12,6 +12,8 @@ interface IPageProps {
 
 const Page = async ({ params }: IPageProps) => {
   let { id, title } = await params
+  
+  console.log(id,title)
 
   return (
     <>

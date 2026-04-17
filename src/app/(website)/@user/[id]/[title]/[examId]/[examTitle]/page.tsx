@@ -1,10 +1,28 @@
+import { getExamById } from '@/src/features/exams/apis/exams.api'
+import QuizComponent from '@/src/features/questions/_components/quiz-component'
+import { getQuestions } from '@/src/features/questions/apis/question.api'
 import React from 'react'
 
-const page = () => {
+interface IProps {
+  params: Promise<{
+    examId: string
+    examTitle: string
+  }>
+}
 
-    console.log("Ffff")
+
+const page = async ({ params }: IProps) => {
+
+  const { examId, examTitle } = await params
+
+  const examInfo = await getExamById(examId)
+  const questionsPayload = await getQuestions(examId)
+
+  console.log(examInfo.exam._count)
+  console.log(questionsPayload)
+
   return (
-    <div>page</div>
+    <QuizComponent examInfo={examInfo} questions={questionsPayload} />
   )
 }
 

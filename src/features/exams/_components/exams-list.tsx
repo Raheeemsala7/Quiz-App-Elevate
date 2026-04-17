@@ -6,7 +6,8 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { useMemo } from 'react'
 import ExamsListSkeleton from './exams-list-skeleton'
 import Link from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
+import  slugify  from "slugify"
 
 
 const ExamsList = ({ id }: { id: string }) => {
@@ -75,7 +76,7 @@ const ExamsList = ({ id }: { id: string }) => {
                         </div>
 
                         <div className="absolute bottom-4 right-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-                            <Link href={`${pathName}/${exam.id}/${exam.title}`}  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-3 py-1  shadow">
+                            <Link href={`${pathName}/${exam.id}/${slugify(exam.title, { lower: true })}`} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-3 py-1  shadow">
                                 <span>START </span>
                                 <MoveRight className="size-5 text-white" />
                             </Link >
