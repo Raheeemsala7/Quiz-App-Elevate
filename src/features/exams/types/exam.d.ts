@@ -24,8 +24,6 @@ export interface IExamInfo {
 
     diploma: IDiploma;
 
-    _count: {
-      questions: number;
-    };
+    questionsCount: number
   }
 }

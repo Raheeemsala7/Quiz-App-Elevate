@@ -18,11 +18,11 @@ const page = async ({ params }: IProps) => {
   const examInfo = await getExamById(examId)
   const questionsPayload = await getQuestions(examId)
 
-  console.log(examInfo.exam._count)
-  console.log(questionsPayload)
+  // console.log(examInfo.exam)
+  console.log("rrrrrrrrrrrrrrrrrr" + questionsPayload)
 
   return (
-    <QuizComponent examInfo={examInfo} questions={questionsPayload} />
+    <QuizComponent examInfo={examInfo} questions={questionsPayload.questions} />
   )
 }
 

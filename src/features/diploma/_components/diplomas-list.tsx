@@ -20,6 +20,8 @@ export default function DiplomasList() {
 
     const allDiplomas = useMemo(() => data?.pages.flatMap((page) => page.data ?? []) ?? [], [data])
 
+    console.log(data)
+
 
 
 
@@ -34,6 +36,7 @@ export default function DiplomasList() {
             </div>
         )
     }
+    console.log(allDiplomas.length)
 
     return (
 

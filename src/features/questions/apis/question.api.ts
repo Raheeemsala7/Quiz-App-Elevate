@@ -20,7 +20,7 @@ export const getQuestions = async (examId: string) => {
         }
     })
 
-    const data: IApiResponse<IQuestion[]> = await res.json()
+    const data: IApiResponse<IQuestion> = await res.json()
 
     if (!data.status) {
         throw new Error(data.message || "Something went wrong");

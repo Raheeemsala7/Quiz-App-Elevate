@@ -19,6 +19,9 @@ export const useDiplomasInfinite = () => {
     const page = Number(searchParams.get("page")) || 1
     const limit = Number(searchParams.get("limit")) || DEFAULT_LIMIT_DIPLOMA
 
+    console.log("page " + page)
+    console.log("limit " + limit)
+
     return useInfiniteQuery({
         queryKey: DIPLOMA_KEYS.list(page, limit),
         queryFn: async ({ pageParam }) => {

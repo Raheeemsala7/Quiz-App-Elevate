@@ -54,7 +54,7 @@ const ExamsList = ({ id }: { id: string }) => {
 
                         <div className="relative flex justify-center items-center size-25 bg-[#DBEAFE] border border-[#8EC5FF]">
                             <Image
-                                src={`https://exam-app.elevate-bootcamp.cloud${exam.image}`}
+                                src={`${exam.image}`}
                                 width={75}
                                 height={75}
                                 className="object-fill h-19"
