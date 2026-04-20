@@ -1,5 +1,5 @@
 import { postSubmissions } from "@/src/features/questions/apis/question.api";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 
 export async function POST(req: NextRequest) {
@@ -7,5 +7,5 @@ export async function POST(req: NextRequest) {
 
     const payload = await postSubmissions({ req, body })
 
-    return payload
+    return NextResponse.json(payload)
 }

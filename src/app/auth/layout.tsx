@@ -9,7 +9,7 @@ import {
     RectangleEllipsis,
 
 } from "lucide-react";
-import FolderCodeIcon from '@/components/icons/folderIcon';
+import FolderCodeIcon from '@/src/shared/components/icons/folderIcon';
 
 
 const features = [

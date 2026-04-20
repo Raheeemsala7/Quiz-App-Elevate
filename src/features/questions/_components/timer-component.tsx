@@ -17,6 +17,8 @@ export function TimerCircle({ total, remaining }: TimerCircleProps) {
 
     const display = `${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
 
+    
+
     return (
         <div className="relative size-16 flex items-center justify-center">
             <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 44 44">

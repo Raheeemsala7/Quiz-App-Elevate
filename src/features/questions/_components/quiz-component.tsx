@@ -8,6 +8,9 @@ import { RadioGroup, RadioGroupItem } from '@/src/shared/components/ui/radio-gro
 import { Button } from '@/src/shared/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { useSubmissions } from '../hooks/use-submissions';
+import { Loader2 } from 'lucide-react';
+import { IErrorResponse } from '@/src/shared/lib/types/api';
 
 interface IProps {
     questions: IQueItem[];
@@ -24,27 +27,35 @@ const QuizComponent = ({ questions, examInfo }: IProps) => {
     const total = questions.length;
 
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [seconds, setSeconds] = useState(examInfo.exam.duration);
+    // const [seconds, setSeconds] = useState(examInfo.exam.duration);
+    const [seconds, setSeconds] = useState(10);
     const initialSeconds = useRef(seconds);
     const [finished, setFinished] = useState(false);
+    const [showResult, setShowResult] = useState(false)
+
     const startedAt = new Date().toISOString()
 
-    console.log(questions[0])
-    console.log(questions[1])
+    const { mutate, isPending } = useSubmissions()
 
 
 
-    // useEffect(() => {
-    //     if (finished) return;
-    //     if (seconds <= 0) {
-    //         console.log("finish Time")
-    //         // time's up → force submit with whatever answers we have
-    //         // submitExam(selectedAnswers);
-    //         return;
-    //     }
-    //     const t = setTimeout(() => setSeconds((s) => s - 1), 1000);
-    //     return () => clearTimeout(t);
-    // }, [seconds, finished]); // eslint-disable-line
+    useEffect(() => {
+        if (finished) return;
+        if (seconds <= 0) {
+            console.log("finish Time")
+            const payload = buildSubmission()
+            try {
+                mutate(payload)
+                setFinished(true)
+                setShowResult(true)
+            } catch (error) {
+                toast.error("DDD")
+            }
+            return;
+        }
+        const t = setTimeout(() => setSeconds((s) => s - 1), 1000);
+        return () => clearTimeout(t);
+    }, [seconds, finished]); // eslint-disable-line
 
 
 
@@ -67,7 +78,6 @@ const QuizComponent = ({ questions, examInfo }: IProps) => {
         if (currentIndex < questions.length - 1) {
             setCurrentIndex((prev) => prev + 1);
         } else {
-            // console.log("Submit:", form.getValues());
             handleSubmitExam();
 
         }
@@ -82,15 +92,14 @@ const QuizComponent = ({ questions, examInfo }: IProps) => {
             startedAt,
             answers: questions.map((q) => ({
                 questionId: q.id,
-                answerId: values.answers[q.id],
+                answerId: values.answers[q.id] ?? "df5a227a-1e22-43a9-afd7-cb018cb107cc",
             })),
         };
     };
 
 
-    const handleSubmitExam = () => {
+    const handleSubmitExam = async () => {
         const values = form.getValues();
-        console.log("first")
 
         const unanswered = questions.some(
             (q) => !values.answers[q.id]
@@ -103,15 +112,19 @@ const QuizComponent = ({ questions, examInfo }: IProps) => {
 
         const payload = buildSubmission();
 
-        console.log("FINAL PAYLOAD:", payload);
+        try {
+            await mutate(payload)
+            setFinished(true)
+            setShowResult(true)
+        } catch (error) {
+            toast.error("DDD")
+        }
 
-        // 🔥 هنا تضيف API call
-        // await mutate(payload)
     };
 
 
 
-    const percentage = ((currentIndex + 1 )/ examInfo.exam.questionsCount) * 100;
+    const percentage = ((currentIndex + 1) / examInfo.exam.questionsCount) * 100;
 
 
     return (
@@ -157,16 +170,19 @@ const QuizComponent = ({ questions, examInfo }: IProps) => {
                     disabled={currentIndex === 0}
                     onClick={() => setCurrentIndex((prev) => prev - 1)}
                     className='flex-1 bg-gray-200 font-mono text-sm'
-                    >
+                >
                     Previous
                 </Button>
 
                 <Button
                     onClick={handleNext}
-                    disabled={!selectedAnswer}
+                    disabled={!selectedAnswer || isPending}
                     className='flex-1 bg-blue-600 font-mono text-sm'
                 >
-                    {currentIndex === questions.length - 1 ? "Submit" : "Next"}
+                    {currentIndex === questions.length - 1 ? isPending ? <>
+                        <span>Submiting....</span>
+                        <Loader2 className='animate-spin transition-all' />
+                    </> : "submit" : "Next"}
                 </Button>
             </div>
 
