@@ -7,6 +7,7 @@ import { TimerCircle } from './timer-component';
 import { RadioGroup, RadioGroupItem } from '@/src/shared/components/ui/radio-group';
 import { Button } from '@/src/shared/components/ui/button';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 interface IProps {
     questions: IQueItem[];
@@ -21,29 +22,30 @@ type FormValues = {
 const QuizComponent = ({ questions, examInfo }: IProps) => {
 
     const total = questions.length;
-    const startedAtRef = useRef<string>(new Date().toISOString()); // captured once on mount
 
-    const [currentIndex, setCurrentIndex] = useState(1);
-    const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({}); // questionId -> answerId
+    const [currentIndex, setCurrentIndex] = useState(0);
     const [seconds, setSeconds] = useState(examInfo.exam.duration);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitError, setSubmitError] = useState<string | null>(null);
+    const initialSeconds = useRef(seconds);
     const [finished, setFinished] = useState(false);
+    const startedAt = new Date().toISOString()
+
+    console.log(questions[0])
+    console.log(questions[1])
 
 
-    useEffect(() => {
-        if (finished) return;
-        if (seconds <= 0) {
-            // time's up → force submit with whatever answers we have
-            // submitExam(selectedAnswers);
-            return;
-        }
-        const t = setTimeout(() => setSeconds((s) => s - 1), 1000);
-        return () => clearTimeout(t);
-    }, [seconds, finished]); // eslint-disable-line
 
+    // useEffect(() => {
+    //     if (finished) return;
+    //     if (seconds <= 0) {
+    //         console.log("finish Time")
+    //         // time's up → force submit with whatever answers we have
+    //         // submitExam(selectedAnswers);
+    //         return;
+    //     }
+    //     const t = setTimeout(() => setSeconds((s) => s - 1), 1000);
+    //     return () => clearTimeout(t);
+    // }, [seconds, finished]); // eslint-disable-line
 
-    console.log(questions)
 
 
     const currentQuestion = questions[currentIndex];
@@ -65,33 +67,72 @@ const QuizComponent = ({ questions, examInfo }: IProps) => {
         if (currentIndex < questions.length - 1) {
             setCurrentIndex((prev) => prev + 1);
         } else {
-            console.log("Submit:", form.getValues());
+            // console.log("Submit:", form.getValues());
+            handleSubmitExam();
+
         }
     };
 
-    console.log(questions)
 
-    const percentage = (currentIndex / examInfo.exam.questionsCount) * 100;
+    const buildSubmission = () => {
+        const values = form.getValues();
+
+        return {
+            examId: examInfo.exam.id,
+            startedAt,
+            answers: questions.map((q) => ({
+                questionId: q.id,
+                answerId: values.answers[q.id],
+            })),
+        };
+    };
+
+
+    const handleSubmitExam = () => {
+        const values = form.getValues();
+        console.log("first")
+
+        const unanswered = questions.some(
+            (q) => !values.answers[q.id]
+        );
+
+        if (unanswered) {
+            toast.error("لازم تجاوب كل الأسئلة");
+            return;
+        }
+
+        const payload = buildSubmission();
+
+        console.log("FINAL PAYLOAD:", payload);
+
+        // 🔥 هنا تضيف API call
+        // await mutate(payload)
+    };
+
+
+
+    const percentage = ((currentIndex + 1 )/ examInfo.exam.questionsCount) * 100;
 
 
     return (
-        <div>
-            <div className="flex items-center">
-                <div className="flex-1 w-full">
+        <div className='p-6 space-y-4 bg-white'>
+            <div className="flex items-center gap-6">
+                <div className="flex-1 w-full  space-y-1.5">
                     <div className="flex justify-between">
-                        <h6>{examInfo.exam.title}</h6>
-                        <p>Question {currentIndex} of <span className='text-blue-600'>{examInfo.exam.questionsCount}</span></p>
+                        <h6 className='text-base font-mono text-[#1F2937]'>{examInfo.exam.diploma.title} - {examInfo.exam.title}</h6>
+                        <p className='font-mono text-sm font-semibold text-[#6B7280]'>Question {currentIndex + 1} of <span className='text-blue-600'>{total}</span></p>
                     </div>
-
                     <Progress value={percentage} />
-
                 </div>
-                <TimerCircle totalSeconds={seconds} />
+                <div className="border border-gray-200 h-16.25"></div>
+                <TimerCircle
+                    total={initialSeconds.current}
+                    remaining={seconds}
+                />
             </div>
 
-
-            <h2 className="text-xl font-semibold">
-                {currentIndex + 1}. {currentQuestion.text}
+            <h2 className="text-xl font-mono font-semibold text-blue-600">
+                {currentQuestion.text}
             </h2>
 
             <RadioGroup
@@ -99,32 +140,39 @@ const QuizComponent = ({ questions, examInfo }: IProps) => {
                 onValueChange={(value) =>
                     form.setValue(`answers.${currentQuestion.id}`, value)
                 }
+                className='gap-2.5'
             >
                 {currentQuestion.answers.map((answer) => (
-                    <div key={answer.id} className="flex items-center gap-2">
+                    <div key={answer.id} className="flex items-center gap-2.5 px-4 bg-gray-50 hover:bg-[#F3F4F6] transition-colors">
                         <RadioGroupItem value={answer.id} id={answer.id} />
-                        <label htmlFor={answer.id}>{answer.text}</label>
+                        <label className='text-[#1F2937] font-mono flex-1 py-4' htmlFor={answer.id}>{answer.text}</label>
                     </div>
                 ))}
             </RadioGroup>
 
             {/* Navigation */}
-            <div className="flex justify-between">
+            <div className="flex items-center gap-4">
                 <Button
                     variant="outline"
                     disabled={currentIndex === 0}
                     onClick={() => setCurrentIndex((prev) => prev - 1)}
-                >
+                    className='flex-1 bg-gray-200 font-mono text-sm'
+                    >
                     Previous
                 </Button>
 
                 <Button
                     onClick={handleNext}
                     disabled={!selectedAnswer}
+                    className='flex-1 bg-blue-600 font-mono text-sm'
                 >
                     {currentIndex === questions.length - 1 ? "Submit" : "Next"}
                 </Button>
             </div>
+
+
+
+
         </div>
     )
 }

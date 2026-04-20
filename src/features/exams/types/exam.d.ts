@@ -22,7 +22,12 @@ export interface IExamInfo {
     createdAt: string;
     updatedAt: string;
 
-    diploma: IDiploma;
+    diploma: {
+      id: string;
+      image: string;
+      title: string
+      description: string;
+    }
 
     questionsCount: number
   }
