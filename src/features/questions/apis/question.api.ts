@@ -35,7 +35,7 @@ export const getQuestions = async (examId: string) => {
 
 
 
-export const postSubmissions = async ({ req , body }: { req: NextRequest; body: IPayloadSubmissions; }) => {
+export const postSubmissions = async ({ req, body }: { req: NextRequest; body: IPayloadSubmissions; }) => {
 
     const token = await getToken({ req });
 
@@ -50,7 +50,16 @@ export const postSubmissions = async ({ req , body }: { req: NextRequest; body: 
         }
     })
 
-    const data: IResponseSubmissions = await res.json()
 
-    return data
+    const data = await res.json()
+
+    if (!res.ok) {
+        throw {
+            status: false,
+            code: data.code || res.status,
+            message: data.message || "Something went wrong",
+            errors: data.errors || [],
+        } as IErrorResponse;
+    }
+    return data.payload as IResponseSubmissions
 }

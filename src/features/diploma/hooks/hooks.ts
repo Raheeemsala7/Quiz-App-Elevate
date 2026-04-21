@@ -5,7 +5,7 @@ import { DIPLOMA_KEYS } from "../apis/diploma.options";
 import { useSearchParams } from "next/navigation";
 import { DEFAULT_LIMIT_DIPLOMA } from "@/src/shared/constant/api.constant";
 import { IApiResponse, IPagination } from "@/src/shared/lib/types/api";
-import { IDiploma } from "@/src/shared/lib/types/diploma";
+import { IDiploma } from "../types/diploma";
 
 
 

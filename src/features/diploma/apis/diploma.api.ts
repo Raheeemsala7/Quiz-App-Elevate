@@ -1,9 +1,9 @@
-import { IDiploma } from "@/src/shared/lib/types/diploma";
 import { IErrorResponse, IApiResponse, IPagination } from "@/src/shared/lib/types/api";
 import { DEFAULT_LIMIT_DIPLOMA, HEADERS } from "@/src/shared/constant/api.constant";
 import { NextRequest, userAgent } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { RESPONSES } from "@/src/shared/constant/api.responses";
+import { IDiploma } from "../types/diploma";
 
 
 

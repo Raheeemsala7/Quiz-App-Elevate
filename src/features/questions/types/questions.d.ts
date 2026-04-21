@@ -29,7 +29,7 @@ export interface IPayloadSubmissions {
     examId: string;
     answers: {
         questionId: string;
-        answerId: string;
+        answerId?: string;
     }[]
     startedAt: string
 
@@ -44,7 +44,7 @@ interface ExamBrief {
     duration: number;
 }
 
-interface Submission {
+export interface ISubmission {
     id: string;
     userId: string;
     examId: string;
@@ -60,15 +60,21 @@ interface Submission {
     updatedAt: string;
 }
 
-interface QuestionAnalytics {
+export interface IQuestionAnalytics {
     questionId: string;
     questionText: string;
-    selectedAnswer: any;
+    selectedAnswer: {
+        id: string;
+        text: string;
+    };
     isCorrect: boolean;
-    correctAnswer: any;
+    correctAnswer: {
+        id: string;
+        text: string;
+    };
 }
 export interface IResponseSubmissions {
     message: string;
-    submission: Submission;
-    analytics: QuestionAnalytics[];
+    submission: ISubmission;
+    analytics: IQuestionAnalytics[];
 }

@@ -25,6 +25,7 @@
     "react-dom": "19.2.3",
     "react-hook-form": "^7.72.1",
     "react-infinite-scroll-component": "^7.1.0",
+    "recharts": "3.8.0",
     "skeleton": "^4.15.2",
     "slugify": "^1.6.9",
     "sonner": "^2.0.7",

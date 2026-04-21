@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react'
-import { IQueItem, IQuestion } from '../types/questions';
+import { IQueItem, IQuestion, IQuestionAnalytics, ISubmission } from '../types/questions';
 import { IExamInfo } from '../../exams/types/exam';
 import { Progress } from '@/src/shared/components/ui/progress';
 import { TimerCircle } from './timer-component';
@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { useSubmissions } from '../hooks/use-submissions';
 import { Loader2 } from 'lucide-react';
 import { IErrorResponse } from '@/src/shared/lib/types/api';
+import ResultView from './result-view';
 
 interface IProps {
     questions: IQueItem[];
@@ -27,35 +28,45 @@ const QuizComponent = ({ questions, examInfo }: IProps) => {
     const total = questions.length;
 
     const [currentIndex, setCurrentIndex] = useState(0);
-    // const [seconds, setSeconds] = useState(examInfo.exam.duration);
-    const [seconds, setSeconds] = useState(10);
+    const [seconds, setSeconds] = useState(examInfo.exam.duration);
     const initialSeconds = useRef(seconds);
     const [finished, setFinished] = useState(false);
     const [showResult, setShowResult] = useState(false)
 
+    const [submission, setSubmission] = useState<ISubmission>()
+    const [questionAnalytics, setQuestionAnalytics] = useState<IQuestionAnalytics[]>()
+
     const startedAt = new Date().toISOString()
 
-    const { mutate, isPending } = useSubmissions()
+    const { mutateAsync, isPending } = useSubmissions()
 
 
 
-    useEffect(() => {
-        if (finished) return;
-        if (seconds <= 0) {
-            console.log("finish Time")
-            const payload = buildSubmission()
-            try {
-                mutate(payload)
-                setFinished(true)
-                setShowResult(true)
-            } catch (error) {
-                toast.error("DDD")
-            }
-            return;
-        }
-        const t = setTimeout(() => setSeconds((s) => s - 1), 1000);
-        return () => clearTimeout(t);
-    }, [seconds, finished]); // eslint-disable-line
+    // useEffect(() => {
+    //     if (finished) return;
+    //     if (seconds <= 0) {
+    //         console.log("finish Time")
+    //         const payload = buildSubmission();
+
+    //         mutateAsync(payload)
+    //             .then((data) => {
+    //                 setSubmission(data.submission);
+    //                 setQuestionAnalytics(data.analytics);
+    //                 toast.success(data.message);
+    //                 setFinished(true);
+    //                 setShowResult(true);
+    //             })
+    //             .catch((error: any) => {
+    //                 console.log("ERROR:", error);
+    //                 setShowResult(false);
+    //                 toast.error(error?.message || "Something went wrong");
+    //             });
+
+    //         return;
+    //     }
+    //     const t = setTimeout(() => setSeconds((s) => s - 1), 1000);
+    //     return () => clearTimeout(t);
+    // }, [seconds, finished]); // eslint-disable-line
 
 
 
@@ -87,13 +98,19 @@ const QuizComponent = ({ questions, examInfo }: IProps) => {
     const buildSubmission = () => {
         const values = form.getValues();
 
+        const answers = questions.map((q) => {
+            const answerId = values.answers[q.id];
+
+            return {
+                questionId: q.id,
+                ...(answerId != null && { answerId }),
+            };
+        });
+
         return {
             examId: examInfo.exam.id,
             startedAt,
-            answers: questions.map((q) => ({
-                questionId: q.id,
-                answerId: values.answers[q.id] ?? "df5a227a-1e22-43a9-afd7-cb018cb107cc",
-            })),
+            answers,
         };
     };
 
@@ -113,11 +130,25 @@ const QuizComponent = ({ questions, examInfo }: IProps) => {
         const payload = buildSubmission();
 
         try {
-            await mutate(payload)
-            setFinished(true)
-            setShowResult(true)
-        } catch (error) {
-            toast.error("DDD")
+            const data = await mutateAsync(payload)
+
+            setSubmission(data.submission)
+            setQuestionAnalytics(data.analytics)
+            toast.success("done")
+
+            console.log(data)
+
+            if (data.analytics && data.submission) {
+                setFinished(true)
+                setShowResult(true)
+            }
+
+        } catch (error: any) {
+            setShowResult(false)
+
+            // 🧠 message 
+            const message = error?.message || "Something went wrong";
+            toast.error(message || "Something went wrong");
         }
 
     };
@@ -137,54 +168,71 @@ const QuizComponent = ({ questions, examInfo }: IProps) => {
                     </div>
                     <Progress value={percentage} />
                 </div>
-                <div className="border border-gray-200 h-16.25"></div>
-                <TimerCircle
-                    total={initialSeconds.current}
-                    remaining={seconds}
-                />
+                {!showResult && (
+                    <>
+                        <div className="border border-gray-200 h-16.25"></div>
+                        <TimerCircle
+                            total={initialSeconds.current}
+                            remaining={seconds}
+                        />
+                    </>
+                )}
             </div>
 
-            <h2 className="text-xl font-mono font-semibold text-blue-600">
-                {currentQuestion.text}
-            </h2>
+            {!showResult ? <>
+                <h2 className="text-xl font-mono font-semibold text-blue-600">
+                    {currentQuestion.text}
+                </h2>
 
-            <RadioGroup
-                value={selectedAnswer}
-                onValueChange={(value) =>
-                    form.setValue(`answers.${currentQuestion.id}`, value)
-                }
-                className='gap-2.5'
-            >
-                {currentQuestion.answers.map((answer) => (
-                    <div key={answer.id} className="flex items-center gap-2.5 px-4 bg-gray-50 hover:bg-[#F3F4F6] transition-colors">
-                        <RadioGroupItem value={answer.id} id={answer.id} />
-                        <label className='text-[#1F2937] font-mono flex-1 py-4' htmlFor={answer.id}>{answer.text}</label>
-                    </div>
-                ))}
-            </RadioGroup>
-
-            {/* Navigation */}
-            <div className="flex items-center gap-4">
-                <Button
-                    variant="outline"
-                    disabled={currentIndex === 0}
-                    onClick={() => setCurrentIndex((prev) => prev - 1)}
-                    className='flex-1 bg-gray-200 font-mono text-sm'
+                <RadioGroup
+                    value={selectedAnswer}
+                    onValueChange={(value) =>
+                        form.setValue(`answers.${currentQuestion.id}`, value)
+                    }
+                    className='gap-2.5'
                 >
-                    Previous
-                </Button>
+                    {currentQuestion.answers.map((answer) => (
+                        <div key={answer.id} className="flex items-center gap-2.5 px-4 bg-gray-50 hover:bg-[#F3F4F6] transition-colors">
+                            <RadioGroupItem value={answer.id} id={answer.id} className='data-checked:border-blue-600'  indicatorClassName='blue' />
+                            <label className='text-[#1F2937] font-mono flex-1 py-4' htmlFor={answer.id}>{answer.text}</label>
+                        </div>
+                    ))}
+                </RadioGroup>
 
-                <Button
-                    onClick={handleNext}
-                    disabled={!selectedAnswer || isPending}
-                    className='flex-1 bg-blue-600 font-mono text-sm'
-                >
-                    {currentIndex === questions.length - 1 ? isPending ? <>
-                        <span>Submiting....</span>
-                        <Loader2 className='animate-spin transition-all' />
-                    </> : "submit" : "Next"}
-                </Button>
-            </div>
+                {/* Navigation */}
+                <div className="flex items-center gap-4">
+                    <Button
+                        variant="outline"
+                        disabled={currentIndex === 0}
+                        onClick={() => setCurrentIndex((prev) => prev - 1)}
+                        className='flex-1 bg-gray-200 font-mono text-sm'
+                    >
+                        Previous
+                    </Button>
+
+                    <Button
+                        onClick={handleNext}
+                        disabled={!selectedAnswer || isPending}
+                        className='flex-1 bg-blue-600 font-mono text-sm'
+                    >
+                        {currentIndex === questions.length - 1 ? isPending ? <>
+                            <span>Submiting....</span>
+                            <Loader2 className='animate-spin transition-all' />
+                        </> : "submit" : "Next"}
+                    </Button>
+                </div>
+
+            </> : <>
+
+                <h2 className="text-xl font-mono font-semibold text-blue-600">
+                    Result :
+                </h2>
+
+                <ResultView submission={submission!} analytics={questionAnalytics || []} />
+
+            </>}
+
+
 
 
 

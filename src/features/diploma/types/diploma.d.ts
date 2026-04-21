@@ -7,4 +7,3 @@ export interface IDiploma extends ITimeStamp {
   createdAt: string;
   updatedAt: string;
 }
-
