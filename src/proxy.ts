@@ -15,7 +15,6 @@ export default async function proxy(req: NextRequest) {
     let pathname = req.nextUrl.pathname
 
 
-    // let token = req.cookies.get(process.env.NEXT_AUTH_SESSION_COOKIE_NAME!)?.value
 
     const token = await getToken({ req });
 
@@ -32,12 +31,6 @@ export default async function proxy(req: NextRequest) {
         if (token?.token) {
             return NextResponse.redirect(new URL("/", req.nextUrl))
         }
-
-        // const redirectUrl = new URL('/auth/login', req.nextUrl.origin);
-
-        // redirectUrl.searchParams.set('callbackUrl', pathname)
-
-        // return NextResponse.redirect(redirectUrl)
 
         return NextResponse.next();
 

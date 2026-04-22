@@ -1,6 +1,7 @@
 import Credentials from "next-auth/providers/credentials";
-import { IAuthResponse } from "./shared/lib/types/auth";
 import { NextAuthOptions } from "next-auth";
+import { IApiResponse } from "./shared/lib/types/api";
+import { IAuthResponse } from "./features/auth/types/auth";
 
 
 export const authOptions: NextAuthOptions = {
@@ -14,15 +15,6 @@ export const authOptions: NextAuthOptions = {
                 user: {}
             },
             authorize: async (credentials) => {
-
-                // if (credentials?.token && credentials?.user) {
-                //     const user = JSON.parse(credentials.user)
-                //     return {
-                //         id: user.id,
-                //         token: credentials.token,
-                //         user
-                //     }
-                // }
 
                 const res = await fetch(`${process.env.API_URL}/auth/login`, {
                     method: "POST",
