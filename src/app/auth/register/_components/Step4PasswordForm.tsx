@@ -1,11 +1,10 @@
 "use client"
-import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/src/shared/components/ui/button";
+import { Field, FieldError, FieldLabel } from "@/src/shared/components/ui/field";
+import { Input } from "@/src/shared/components/ui/input";
 import { register } from "@/src/features/auth/hooks/hooks";
 import { createPasswordSchema, CreatePasswordType } from "@/src/shared/lib/zodSchema"
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form"

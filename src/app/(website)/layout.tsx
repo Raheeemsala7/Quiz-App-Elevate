@@ -2,11 +2,13 @@
 import { authOptions } from '@/src/auth'
 import Breadcrumb from '@/src/shared/components/breadcrumb'
 import LogoApp from '@/src/shared/components/icons/Logo'
+import SignOutButton from '@/src/shared/components/signOutButton'
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/shared/components/ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/src/shared/components/ui/dropdown-menu'
 import { cn } from '@/src/shared/lib/utils'
 import { Bolt, EllipsisIcon, GraduationCap, HomeIcon, LogOutIcon, UserRound } from 'lucide-react'
 import { getServerSession } from 'next-auth'
+import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -23,6 +25,7 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
     const isAdmin = userData?.user.role === "ADMIN" ? true : false
 
     console.log(userData?.user)
+
 
 
 
@@ -92,10 +95,8 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
 
                             </DropdownMenuGroup>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem className='p-4 text-red-600'>
-                                <LogOutIcon />
-                                Log out
-                            </DropdownMenuItem>
+                            <SignOutButton />
+
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

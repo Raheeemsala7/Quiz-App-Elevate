@@ -31,3 +31,31 @@ export const getProfile = async (req: NextRequest) => {
     return data
 
 }
+
+
+export const removeAccount = async (req: NextRequest) => {
+
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized as IErrorResponse
+
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile`, {
+        method: "DELETE",
+        headers: {
+            ...HEADERS.authorize(token.token)
+        }
+    })
+
+    console.log(res)
+    console.log(res.ok)
+    console.log(res.body)
+
+    const data: IApiResponse<{ message: string }> = await res.json()
+
+    if (!res.ok) {
+        throw new Error(data.message || "Something went wrong");
+    }
+
+    return data
+}
