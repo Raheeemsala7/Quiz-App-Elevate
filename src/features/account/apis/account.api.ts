@@ -40,7 +40,7 @@ export const removeAccount = async (req: NextRequest) => {
     if (!token) return RESPONSES.unauthorized as IErrorResponse
 
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/account`, {
         method: "DELETE",
         headers: {
             ...HEADERS.authorize(token.token)

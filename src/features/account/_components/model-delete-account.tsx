@@ -1,19 +1,24 @@
+"use client"
 import { Button } from '@/src/shared/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/src/shared/components/ui/dialog'
-import {  TriangleAlertIcon } from 'lucide-react'
+import { TriangleAlertIcon } from 'lucide-react'
 import { useRemoveAccount } from '../hooks/use-account'
 import { toast } from 'sonner'
+import { signOut } from 'next-auth/react'
 
 const ModelDeleteAccount = () => {
-    const {mutate , isPending} = useRemoveAccount()
+    const { mutate, isPending } = useRemoveAccount()
 
     const handelRemoveAccount = () => {
-        try {
-            mutate()
-            toast.success("Done Remove Account")
-        } catch (error) {
-            toast.error("done Remove Account")
-        }
+        mutate(undefined, {
+            onSuccess: () => {
+                toast.success("Account deleted successfully")
+                signOut({callbackUrl : "/auth/login"})
+            },
+            onError: (error: any) => {
+                toast.error(error.message || "Failed to delete account")
+            }
+        })
     }
     return (
         <Dialog>
