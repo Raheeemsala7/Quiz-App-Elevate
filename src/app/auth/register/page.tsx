@@ -1,7 +1,7 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/src/shared/components/ui/button";
+import { Field, FieldError, FieldLabel } from "@/src/shared/components/ui/field";
+import { Input } from "@/src/shared/components/ui/input";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,9 +20,9 @@ import {
     StepperNav,
     StepperSeparator,
     StepperTrigger,
-} from "@/components/reui/stepper";
+} from "@/src/shared/components/reui/stepper";
 import { useState } from "react";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/src/shared/components/ui/input-otp";
 import { toast } from "sonner";
 import CountryPhoneSelector from "./_components/country-phone-selector";
 import Step4PasswordForm from "./_components/Step4PasswordForm";
@@ -377,7 +377,6 @@ const RegisterPage = () => {
 
             }
 
-            {/* Form */}
         </>
     );
 };

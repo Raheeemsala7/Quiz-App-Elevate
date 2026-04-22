@@ -1,8 +1,7 @@
 "use client"
 
-import { useEffect, useMemo, useRef } from "react"
+import { useMemo } from "react"
 import DiplomaCard from "./diploma-card"
-import { IDiploma } from "@/src/shared/lib/types/diploma"
 import { useDiplomasInfinite } from "../hooks/hooks"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { DiplomaListSkeleton } from "./diploma-list-skeleton"

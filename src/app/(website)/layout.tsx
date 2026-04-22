@@ -17,10 +17,10 @@ interface IProps {
 }
 
 const layoutDashboard = async ({ children, admin, user }: IProps) => {
-    const isAdmin = false
 
 
     const userData = await getServerSession(authOptions)
+    const isAdmin = userData?.user.role === "ADMIN" ? true : false
 
     console.log(userData?.user)
 
@@ -37,12 +37,12 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
                 </Link>
 
                 <div className="flex flex-col justify-between items-baseline flex-1">
-                    <div className='space-y-2'>
+                    <div className='space-y-2 w-full'>
                         <Link href={"/"} className='flex p-4 gap-2.5 group  hover:bg-blue-100 border border-transparent hover:border-blue-600 transition-all'>
                             <GraduationCap className='size-6 text-gray-500 group-hover:text-blue-600 transition-colors' />
                             <span className='text-gray-500 group-hover:text-blue-600 font-mono text-base transition-colors'>Diploma</span>
                         </Link>
-                        <Link href={"/"} className='flex p-4 gap-2.5 group  hover:bg-blue-100 hover:border border-blue-600 transition-all'>
+                        <Link href={"/account"} className='flex p-4 gap-2.5 group  hover:bg-blue-100 hover:border border-blue-600 transition-all'>
                             <UserRound className='size-6 text-gray-500 group-hover:text-blue-600 transition-colors' />
                             <span className='text-gray-500 group-hover:text-blue-600 font-mono text-base transition-colors'>Account</span>
                         </Link>
@@ -55,7 +55,7 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
                             >
                                 <Avatar>
                                     <AvatarFallback className='text-white'>
-                                        {userData?.user.firstName.slice(0,1).toLocaleUpperCase()} {userData?.user.lastName.slice(0,1).toLocaleUpperCase()}
+                                        {userData?.user.firstName.slice(0, 1).toLocaleUpperCase()} {userData?.user.lastName.slice(0, 1).toLocaleUpperCase()}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -82,7 +82,7 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
                                         Account
                                     </Link>
                                 </DropdownMenuItem>
-                            <DropdownMenuSeparator />
+                                <DropdownMenuSeparator />
                                 <DropdownMenuItem className='p-4 rounded-none' asChild>
                                     <Link className='p-4' href={"/"}>
                                         <Bolt />
@@ -102,10 +102,12 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
 
             </aside>
 
-            <main className='w-full bg-[#F9FAFB] p-4'>
+            <main className='w-full bg-[#F9FAFB] space-y-6 flex flex-col'>
                 <Breadcrumb />
 
-                {isAdmin ? admin : user}
+                <div className='p-6 flex-col flex flex-1'>
+                    {isAdmin ? admin : user}
+                </div>
 
                 {/* {children} */}
             </main>
