@@ -3,7 +3,7 @@ import { RESPONSES } from "@/src/shared/constant/api.responses";
 import { IApiResponse, IErrorResponse } from "@/src/shared/lib/types/api";
 import { getToken } from "next-auth/jwt";
 import { NextRequest } from "next/server";
-import { IProfile } from "../types/account";
+import { IPayloadUpdatedProfile, IProfile } from "../types/account";
 
 
 
@@ -32,6 +32,31 @@ export const getProfile = async (req: NextRequest) => {
 
 }
 
+export const updateProfile = async ({ req, body }: { req: NextRequest; body: IPayloadUpdatedProfile; }) => {
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized as IErrorResponse
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile`, {
+        method: "PATCH",
+        headers: {
+            ...HEADERS.JsonBody,
+            ...HEADERS.authorize(token.token)
+        },
+        body: JSON.stringify(body),
+    })
+
+
+    const data: IApiResponse<IProfile> = await res.json()
+
+    if (!res.ok) {
+        throw new Error(data.message || "Something went wrong");
+    }
+
+    return data
+
+}
+
 
 export const removeAccount = async (req: NextRequest) => {
 
@@ -47,11 +72,32 @@ export const removeAccount = async (req: NextRequest) => {
         }
     })
 
-    console.log(res)
-    console.log(res.ok)
-    console.log(res.body)
-
     const data: IApiResponse<{ message: string }> = await res.json()
+
+    if (!res.ok) {
+        throw new Error(data.message || "Something went wrong");
+    }
+
+    return data
+}
+
+
+export const changeEmailRequest = async ({ req, body }: { req: NextRequest; body: IPayloadUpdatedProfile; }) => {
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized as IErrorResponse
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile`, {
+        method: "POST",
+        headers: {
+            ...HEADERS.JsonBody,
+            ...HEADERS.authorize(token.token)
+        },
+        body: JSON.stringify(body),
+    })
+
+
+    const data: IApiResponse<IProfile> = await res.json()
 
     if (!res.ok) {
         throw new Error(data.message || "Something went wrong");

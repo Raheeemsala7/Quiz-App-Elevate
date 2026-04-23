@@ -1,29 +1,16 @@
-"use client"
 import { Button } from '@/src/shared/components/ui/button'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/src/shared/components/ui/dialog'
-import { Loader2Icon, TriangleAlertIcon } from 'lucide-react'
-import { useRemoveAccount } from '../hooks/use-account'
-import { toast } from 'sonner'
-import { signOut } from 'next-auth/react'
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTrigger } from '@/src/shared/components/ui/dialog'
+import { PencilLine, TriangleAlertIcon } from 'lucide-react'
+import React from 'react'
 
-const ModelDeleteAccount = () => {
-    const { mutate, isPending } = useRemoveAccount()
-
-    const handelRemoveAccount = () => {
-        mutate(undefined, {
-            onSuccess: () => {
-                toast.success("Account deleted successfully")
-                signOut({callbackUrl : "/auth/login"})
-            },
-            onError: (error: any) => {
-                toast.error(error.message || "Failed to delete account")
-            }
-        })
-    }
+const ModelChangeEmail = () => {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className='flex-1 bg-red-50 text-red-600 font-mono !px-4 !py-2.5 !h-auto' variant="outline">Delete My Account</Button>
+                <div className='text-blue-600 cursor-pointer flex gap-1 items-center'>
+                    <PencilLine className='size-4' />
+                    <span className='text-sm'>change</span>
+                </div>
             </DialogTrigger>
             <DialogContent className="sm:max-w-xl flex justify-center items-center flex-col">
 
@@ -41,16 +28,16 @@ const ModelDeleteAccount = () => {
                     <DialogClose className='flex-1' asChild>
                         <Button className='bg-gray-200  font-mono !px-4 !py-2.5 !h-auto' variant="outline">Cancel</Button>
                     </DialogClose>
-                    <Button onClick={handelRemoveAccount} disabled={isPending} className='flex-1 font-mono !px-4 !py-2.5 !h-auto bg-red-600' type="submit">
+                    {/* <Button onClick={handelRemoveAccount} disabled={isPending} className='flex-1 font-mono !px-4 !py-2.5 !h-auto bg-red-600' type="submit">
                         {isPending ? <>
                         <Loader2Icon className=' animate-spin' />
                         Yes, delete
-                        </> : "Yes, delete"}
-                    </Button>
+                        </> : "Yes, delete"} */}
+                    {/* </Button> */}
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     )
 }
 
-export default ModelDeleteAccount
+export default ModelChangeEmail
