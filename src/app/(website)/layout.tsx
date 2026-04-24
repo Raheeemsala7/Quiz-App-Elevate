@@ -24,7 +24,7 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
     const userData = await getServerSession(authOptions)
     const isAdmin = userData?.user.role === "ADMIN" ? true : false
 
-    console.log(userData?.user)
+    console.log(userData?.user.role)
 
 
 

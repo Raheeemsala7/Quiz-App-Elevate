@@ -1,9 +1,36 @@
+"use client"
+import { Stepper, StepperIndicator, StepperItem, StepperNav, StepperSeparator, StepperTrigger } from '@/src/shared/components/reui/stepper';
 import { Button } from '@/src/shared/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTrigger } from '@/src/shared/components/ui/dialog'
-import { PencilLine, TriangleAlertIcon } from 'lucide-react'
-import React from 'react'
+import { DiamondIcon, PencilLine, TriangleAlertIcon } from 'lucide-react'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form';
+import { emailRequestSchema, EmailRequestType } from '../schema/profile-schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+
+const steps = [
+    { step: 1, label: "Request", icon: DiamondIcon },
+    { step: 2, label: "Confirm", icon: DiamondIcon },
+
+];
+
 
 const ModelChangeEmail = () => {
+    const [step, setStep] = useState(1)
+
+    const formRequest = useForm<EmailRequestType>({
+        resolver: zodResolver(emailRequestSchema),
+        defaultValues: {
+            email: ""
+        }
+
+    })
+
+    const onSubmitRequest = (values : EmailRequestType) => {
+
+    }
+
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -12,17 +39,47 @@ const ModelChangeEmail = () => {
                     <span className='text-sm'>change</span>
                 </div>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-xl flex justify-center items-center flex-col">
+            <DialogContent className="sm:max-w-xl flex justify-center items-center flex-col p-9">
 
-                <div className="size-27.5 bg-red-50 rounded-full flex justify-center items-center">
-                    <div className="size-20 bg-red-100 rounded-full flex justify-center items-center" >
-                        <TriangleAlertIcon className='size-12.5 text-red-600' />
+                <Stepper defaultValue={step} className="w-full max-w-2xl mx-auto">
+                    <StepperNav>
+                        {steps.map(({ step: s, label, icon: Icon }) => (
+                            <StepperItem key={s} step={s} >
+                                <StepperTrigger>
+                                    <StepperIndicator
+                                        className={`group !bg-transparent
+                                                        transition-all duration-200 size-6
+                                                        data-[state=active]:!bg-blue-100 data-[state=active]:shadow-[0px_0px_3px_6px_#DBEAFE]
+                                                    `}
+                                    >
+                                        <div>
+                                            <Icon className="bg-transparent group-data-[state=completed]:!stroke-blue-600 group-data-[state=active]:!stroke-blue-600 group-data-[state=completed]:!fill-blue-600 group-data-[state=active]:!fill-blue-600 group-data-[state=inactive]:!stroke-blue-600" size={25} />
+                                        </div>
+                                    </StepperIndicator>
+                                </StepperTrigger>
+
+                                {/* Line */}
+                                {s !== steps.length && (
+                                    <StepperSeparator className="border-b-2 border-dashed border-blue-600 group-data-[state=completed]/step:border-solid" />
+                                )}
+                            </StepperItem>
+                        ))}
+                    </StepperNav>
+
+
+                </Stepper>
+
+                {step === 1 ?
+                    <div>
+                        <h6 className='text-3xl font-bold'>Change Email</h6>
+
+                    </div> :
+
+                    <div>
+
                     </div>
-                </div>
 
-                <h6 className='text-red-600 text-lg font-mono font-medium'>Are you sure you want to delete your account?</h6>
-                <p className='text-gray-500 text-sm font-mono'>This action is permanent and cannot be undone.</p>
-
+                }
 
                 <DialogFooter className='w-full flex !justify-center items-center'>
                     <DialogClose className='flex-1' asChild>

@@ -3,7 +3,7 @@ import { RESPONSES } from "@/src/shared/constant/api.responses";
 import { IApiResponse, IErrorResponse } from "@/src/shared/lib/types/api";
 import { getToken } from "next-auth/jwt";
 import { NextRequest } from "next/server";
-import { IPayloadUpdatedProfile, IProfile } from "../types/account";
+import { IPayloadEmailRequest, IPayloadUpdatedProfile, IProfile, IRequestEmailResponse } from "../types/account";
 
 
 
@@ -82,12 +82,12 @@ export const removeAccount = async (req: NextRequest) => {
 }
 
 
-export const changeEmailRequest = async ({ req, body }: { req: NextRequest; body: IPayloadUpdatedProfile; }) => {
+export const changeEmailRequest = async ({ req, body }: { req: NextRequest; body: IPayloadEmailRequest; }) => {
     const token = await getToken({ req });
 
     if (!token) return RESPONSES.unauthorized as IErrorResponse
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/email/request`, {
         method: "POST",
         headers: {
             ...HEADERS.JsonBody,
@@ -97,7 +97,31 @@ export const changeEmailRequest = async ({ req, body }: { req: NextRequest; body
     })
 
 
-    const data: IApiResponse<IProfile> = await res.json()
+    const data: IApiResponse<IRequestEmailResponse> = await res.json()
+
+    if (!res.ok) {
+        throw new Error(data.message || "Something went wrong");
+    }
+
+    return data
+}
+
+export const confirmEmailRequest = async ({ req, body }: { req: NextRequest; body: IPayloadEmailRequest; }) => {
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized as IErrorResponse
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/email/confirm`, {
+        method: "POST",
+        headers: {
+            ...HEADERS.JsonBody,
+            ...HEADERS.authorize(token.token)
+        },
+        body: JSON.stringify(body),
+    })
+
+
+    const data: IApiResponse<IRequestEmailResponse> = await res.json()
 
     if (!res.ok) {
         throw new Error(data.message || "Something went wrong");

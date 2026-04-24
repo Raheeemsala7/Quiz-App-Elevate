@@ -33,3 +33,13 @@ export const profileSchema = z.object({
 
 // TypeScript type from Zod schema
 export type ProfileFormType = z.infer<typeof profileSchema>;
+
+
+
+export const emailRequestSchema = z.object({
+    email: z
+        .string()
+        .email('Please enter a valid email address')
+        .min(1, 'Email is required'),
+    })
+    export type EmailRequestType = z.infer<typeof emailRequestSchema>;

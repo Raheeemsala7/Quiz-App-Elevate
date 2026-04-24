@@ -157,33 +157,33 @@ const RegisterPage = () => {
 
                 step > 1 && (
                     <div>
-                        <Stepper defaultValue={step} className="w-full max-w-2xl mx-auto">
-                            <StepperNav>
-                                {steps.map(({ step: s, label, icon: Icon }) => (
-                                    <StepperItem key={s} step={s} >
-                                        <StepperTrigger>
-                                            <StepperIndicator
-                                                className={`group !bg-transparent
-                                                    transition-all duration-200 size-6
-                                                    data-[state=active]:!bg-blue-100 data-[state=active]:shadow-[0px_0px_3px_6px_#DBEAFE]
-                                                `}
-                                            >
-                                                <div>
-                                                    <Icon className="bg-transparent group-data-[state=completed]:!stroke-blue-600 group-data-[state=active]:!stroke-blue-600 group-data-[state=completed]:!fill-blue-600 group-data-[state=active]:!fill-blue-600 group-data-[state=inactive]:!stroke-blue-600" size={25} />
-                                                </div>
-                                            </StepperIndicator>
-                                        </StepperTrigger>
+                            <Stepper defaultValue={step} className="w-full max-w-2xl mx-auto">
+                                <StepperNav>
+                                    {steps.map(({ step: s, label, icon: Icon }) => (
+                                        <StepperItem key={s} step={s} >
+                                            <StepperTrigger>
+                                                <StepperIndicator
+                                                    className={`group !bg-transparent
+                                                        transition-all duration-200 size-6
+                                                        data-[state=active]:!bg-blue-100 data-[state=active]:shadow-[0px_0px_3px_6px_#DBEAFE]
+                                                    `}
+                                                >
+                                                    <div>
+                                                        <Icon className="bg-transparent group-data-[state=completed]:!stroke-blue-600 group-data-[state=active]:!stroke-blue-600 group-data-[state=completed]:!fill-blue-600 group-data-[state=active]:!fill-blue-600 group-data-[state=inactive]:!stroke-blue-600" size={25} />
+                                                    </div>
+                                                </StepperIndicator>
+                                            </StepperTrigger>
 
-                                        {/* Line */}
-                                        {s !== steps.length && (
-                                            <StepperSeparator className="border-b-2 border-dashed border-blue-600 group-data-[state=completed]/step:border-solid" />
-                                        )}
-                                    </StepperItem>
-                                ))}
-                            </StepperNav>
+                                            {/* Line */}
+                                            {s !== steps.length && (
+                                                <StepperSeparator className="border-b-2 border-dashed border-blue-600 group-data-[state=completed]/step:border-solid" />
+                                            )}
+                                        </StepperItem>
+                                    ))}
+                                </StepperNav>
 
 
-                        </Stepper>
+                            </Stepper>
 
                         {step === 2 ? (
                             <div>
