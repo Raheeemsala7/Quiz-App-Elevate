@@ -3,7 +3,7 @@ import { RESPONSES } from "@/src/shared/constant/api.responses";
 import { IApiResponse, IErrorResponse } from "@/src/shared/lib/types/api";
 import { getToken } from "next-auth/jwt";
 import { NextRequest } from "next/server";
-import { IPayloadEmailRequest, IPayloadUpdatedProfile, IProfile, IRequestEmailResponse } from "../types/account";
+import { IConfirmEmailResponse, IPayloadEmailConfirm, IPayloadEmailRequest, IPayloadUpdatedProfile, IProfile, IRequestEmailResponse } from "../types/account";
 
 
 
@@ -106,7 +106,7 @@ export const changeEmailRequest = async ({ req, body }: { req: NextRequest; body
     return data
 }
 
-export const confirmEmailRequest = async ({ req, body }: { req: NextRequest; body: IPayloadEmailRequest; }) => {
+export const confirmEmail = async ({ req, body }: { req: NextRequest; body: IPayloadEmailConfirm; }) => {
     const token = await getToken({ req });
 
     if (!token) return RESPONSES.unauthorized as IErrorResponse
@@ -121,7 +121,7 @@ export const confirmEmailRequest = async ({ req, body }: { req: NextRequest; bod
     })
 
 
-    const data: IApiResponse<IRequestEmailResponse> = await res.json()
+    const data: IApiResponse<IConfirmEmailResponse> = await res.json()
 
     if (!res.ok) {
         throw new Error(data.message || "Something went wrong");

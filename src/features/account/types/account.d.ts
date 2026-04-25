@@ -14,10 +14,18 @@ export interface IPayloadUpdatedProfile {
 
 
 export interface IPayloadEmailRequest {
-    message: string,
-    code: string
+    newEmail: string
 }
 export interface IRequestEmailResponse {
     message: string,
     code: string
+}
+
+
+export interface IPayloadEmailConfirm {
+    code: string
+}
+export interface IConfirmEmailResponse {
+    message: string,
+    user: IUser
 }

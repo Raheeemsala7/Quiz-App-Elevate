@@ -2,11 +2,17 @@
 import { Stepper, StepperIndicator, StepperItem, StepperNav, StepperSeparator, StepperTrigger } from '@/src/shared/components/reui/stepper';
 import { Button } from '@/src/shared/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTrigger } from '@/src/shared/components/ui/dialog'
-import { DiamondIcon, PencilLine, TriangleAlertIcon } from 'lucide-react'
+import { DiamondIcon, Loader2Icon, PencilLine, TriangleAlertIcon } from 'lucide-react'
 import React, { useState } from 'react'
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { emailRequestSchema, EmailRequestType } from '../schema/profile-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Field, FieldError, FieldLabel } from '@/src/shared/components/ui/field';
+import { Input } from '@/src/shared/components/ui/input';
+import { useChangeEmailConfirm, useChangeEmailRequest } from '../hooks/use-account';
+import { toast } from 'sonner';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/src/shared/components/ui/input-otp';
+import { IPayloadEmailConfirm } from '../types/account';
 
 
 const steps = [
@@ -18,30 +24,64 @@ const steps = [
 
 const ModelChangeEmail = () => {
     const [step, setStep] = useState(1)
+    const [open, setOpen] = useState(false)
+    const [code, setCode] = useState("")
+
+    const { mutate: mutateReq, isPending: isPendingReq } = useChangeEmailRequest()
+    const { mutate: mutateConfirm, isPending: isPendingConfirm } = useChangeEmailConfirm()
 
     const formRequest = useForm<EmailRequestType>({
         resolver: zodResolver(emailRequestSchema),
         defaultValues: {
-            email: ""
+            newEmail: ""
         }
 
     })
 
-    const onSubmitRequest = (values : EmailRequestType) => {
-
+    const onSubmitRequest = (values: EmailRequestType) => {
+        mutateReq({
+            newEmail: values.newEmail
+        }, {
+            onSuccess() {
+                toast.success("Verification email sent successfully.")
+                setStep(2)
+                console.log(step)
+                console.log("setStep(2)")
+            },
+            onError: (error: any) => {
+                toast.error(error.message || "Failed to delete account")
+            }
+        })
     }
 
+    const handelVerifyCode = (values: IPayloadEmailConfirm) => {
+        mutateConfirm({
+            code: values.code
+        }, {
+            onSuccess() {
+                toast.success("Your data has been updated.")
+                setOpen(false)
+                setStep(1)
+            },
+            onError: (error: any) => {
+                toast.error(error.message || "Failed to delete account")
+            }
+        })
+    }
+
+
+
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <div className='text-blue-600 cursor-pointer flex gap-1 items-center'>
+                <div className='text-blue-600 cursor-pointer flex gap-1 items-center' onClick={() => setOpen(true)}>
                     <PencilLine className='size-4' />
                     <span className='text-sm'>change</span>
                 </div>
             </DialogTrigger>
             <DialogContent className="sm:max-w-xl flex justify-center items-center flex-col p-9">
 
-                <Stepper defaultValue={step} className="w-full max-w-2xl mx-auto">
+                <Stepper value={step} className="w-full max-w-2xl mx-auto">
                     <StepperNav>
                         {steps.map(({ step: s, label, icon: Icon }) => (
                             <StepperItem key={s} step={s} >
@@ -70,28 +110,91 @@ const ModelChangeEmail = () => {
                 </Stepper>
 
                 {step === 1 ?
-                    <div>
+                    <div className='text-start w-full space-y-4'>
                         <h6 className='text-3xl font-bold'>Change Email</h6>
+                        <p className='text-blue-600 text-2xl font-bold'>Enter your new email</p>
+
+                        <form onSubmit={formRequest.handleSubmit(onSubmitRequest)}>
+                            <Controller
+                                name="newEmail"
+                                control={formRequest.control}
+                                render={({ field, fieldState }) => (
+                                    <Field>
+                                        <FieldLabel className="font-mono ">
+                                            Email
+                                        </FieldLabel>
+                                        <Input
+                                            className=" px-4 py-6 border border-[#E5E7EB] rounded-0 font-mono"
+                                            type="email"
+                                            placeholder="user@example.com"
+
+                                            {...field}
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                className="text-red-500"
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+
+                            <DialogFooter className='w-full flex !justify-center items-center pt-6'>
+
+                                <Button disabled={isPendingReq} className='flex-1 font-mono !px-4 !py-2.5 !h-auto bg-blue-600' type="submit">
+                                    {isPendingReq ? <>
+                                        <Loader2Icon className=' animate-spin' />
+                                        Next
+                                    </> : "Next"}
+                                </Button>
+                            </DialogFooter>
+                        </form>
 
                     </div> :
 
-                    <div>
+                    <div className='text-start w-full space-y-4'>
+                        <h6 className='text-3xl font-bold'>Change Email</h6>
+                        <p className='text-blue-600 text-2xl font-bold'>Verify OTP</p>
+
+                        <p>Please enter the 6-digits code we have sent to:</p>
+                        <div >
+                            user@example.com <span onClick={() => setStep(1)} className="text-blue-600 cursor-pointer underline"> Edit</span>
+                        </div>
+
+                        <div className="flex justify-center mt-5">
+                            <InputOTP maxLength={6} className="mx-auto font-mono"
+                                onComplete={(data) => {
+                                    handelVerifyCode({ code: data });
+                                    setCode(data)
+                                }}
+                            >
+                                <InputOTPGroup>
+                                    <InputOTPSlot className="!font-mono" index={0} />
+                                    <InputOTPSlot className="!font-mono" index={1} />
+                                    <InputOTPSlot className="!font-mono" index={2} />
+                                    <InputOTPSlot className="!font-mono" index={3} />
+                                    <InputOTPSlot className="!font-mono" index={4} />
+                                    <InputOTPSlot className="!font-mono" index={5} />
+                                </InputOTPGroup>
+                            </InputOTP>
+                        </div>
+
+                        <DialogFooter className='w-full flex !justify-center items-center pt-6'>
+
+                            <Button onClick={() => handelVerifyCode({ code })} disabled={isPendingConfirm} className='flex-1 font-mono !px-4 !py-2.5 !h-auto bg-blue-600' type="submit">
+                                {isPendingConfirm ? <>
+                                    <Loader2Icon className=' animate-spin' />
+                                    Verify...
+                                </> : "Verify"}
+                            </Button>
+                        </DialogFooter>
 
                     </div>
 
                 }
 
-                <DialogFooter className='w-full flex !justify-center items-center'>
-                    <DialogClose className='flex-1' asChild>
-                        <Button className='bg-gray-200  font-mono !px-4 !py-2.5 !h-auto' variant="outline">Cancel</Button>
-                    </DialogClose>
-                    {/* <Button onClick={handelRemoveAccount} disabled={isPending} className='flex-1 font-mono !px-4 !py-2.5 !h-auto bg-red-600' type="submit">
-                        {isPending ? <>
-                        <Loader2Icon className=' animate-spin' />
-                        Yes, delete
-                        </> : "Yes, delete"} */}
-                    {/* </Button> */}
-                </DialogFooter>
+
             </DialogContent>
         </Dialog>
     )

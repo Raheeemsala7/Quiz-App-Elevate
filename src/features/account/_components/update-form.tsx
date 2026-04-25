@@ -6,18 +6,22 @@ import { ProfileFormType, profileSchema } from "../schema/profile-schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useGetAccount, useUpdateProfile } from "../hooks/use-account"
 import { Loader } from "lucide-react"
-import { useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
 import CountryPhoneSelector from "@/src/app/auth/register/_components/country-phone-selector"
 import ModelDeleteAccount from "./model-delete-account"
 import { Button } from "@/src/shared/components/ui/button"
 import ModelChangeEmail from "./model-change-email"
 import { toast } from "sonner"
+import { IUser } from "../../auth/types/user"
+import { IConfirmEmailResponse, IPayloadEmailConfirm } from "../types/account"
 
 const UpdateForm = () => {
 
     const { data, isLoading } = useGetAccount()
 
     const { mutate } = useUpdateProfile()
+    const [initialData, setInitialData] = useState<IUser | null>(null)
+
 
 
 
@@ -27,25 +31,29 @@ const UpdateForm = () => {
             firstName: "",
             lastName: "",
             email: "",
-            countryCode: "EG"
+            countryCode: "EG",
+            phone :"",
+            username :""
 
 
         }
     })
 
 
-    useEffect(() => {
-        if (data) {
-            form.reset({
-                firstName: data.firstName,
-                lastName: data.lastName,
-                email: data.email,
-                username: data.username,
-                phone: data.phone,
-                countryCode: "EG"
-            })
-        }
-    }, [data, form])
+
+useEffect(() => {
+    if (data && !form.formState.isDirty) {
+
+        form.reset({
+            firstName: data.firstName ?? "",
+            lastName: data.lastName ?? "",
+            email: data.email ?? "",
+            username: data.username ?? "",
+            phone: data.phone ?? "",
+            countryCode: "EG"
+        })
+    }
+}, [data])
 
     console.log(data)
 
@@ -71,6 +79,7 @@ const UpdateForm = () => {
             }
         })
     }
+  
 
     return (
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
