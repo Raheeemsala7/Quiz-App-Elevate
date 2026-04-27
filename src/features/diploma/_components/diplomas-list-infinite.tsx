@@ -4,7 +4,7 @@ import { useMemo } from "react"
 import DiplomaCard from "./diploma-card"
 import { useDiplomasInfinite } from "../hooks/hooks"
 import InfiniteScroll from "react-infinite-scroll-component"
-import { DiplomaListSkeleton } from "./diploma-list-skeleton"
+import { DiplomaListSkeleton } from "./diploma-list-infinite-skeleton"
 
 export default function DiplomasList() {
     const {

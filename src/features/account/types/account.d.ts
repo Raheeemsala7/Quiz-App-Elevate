@@ -5,6 +5,8 @@ export interface IProfile {
     user: IUser
 }
 
+
+
 export interface IPayloadUpdatedProfile {
     firstName: string;
     lastName: string;
@@ -28,4 +30,9 @@ export interface IPayloadEmailConfirm {
 export interface IConfirmEmailResponse {
     message: string,
     user: IUser
+}
+export interface IPayloadChangePassword {
+    currentPassword: string
+    newPassword: string
+    confirmPassword: string
 }

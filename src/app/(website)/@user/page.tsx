@@ -1,5 +1,5 @@
 
-import DiplomasList from '@/src/features/diploma/_components/diplomas-list'
+import DiplomasList from '@/src/features/diploma/_components/diplomas-list-infinite'
 import {  LucideGraduationCap } from 'lucide-react'
 
 const userPage =  () => {

@@ -22,7 +22,7 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
 
 
     const userData = await getServerSession(authOptions)
-    const isAdmin = userData?.user.role === "ADMIN" ? true : false
+    const isAdmin = userData?.user.role !== "ADMIN" ? true : false
 
     console.log(userData?.user.role)
 
@@ -41,13 +41,17 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
 
                 <div className="flex flex-col justify-between items-baseline flex-1">
                     <div className='space-y-2 w-full'>
-                        <Link href={"/"} className='flex p-4 gap-2.5 group  hover:bg-blue-100 border border-transparent hover:border-blue-600 transition-all'>
-                            <GraduationCap className='size-6 text-gray-500 group-hover:text-blue-600 transition-colors' />
-                            <span className='text-gray-500 group-hover:text-blue-600 font-mono text-base transition-colors'>Diploma</span>
+                        <Link href={"/"} className={cn("flex p-4 gap-2.5 group  transition-all",
+                            isAdmin ? "hover:bg-gray-700 border border-transparent hover:border-gray-400 text-white" : "hover:bg-blue-100 border border-transparent hover:border-blue-600 hover:text-blue-600"
+                        )}>
+                            <GraduationCap className='size-6 text-inherit group-hover:text-inherit transition-colors' />
+                            <span className='text-inherit group-hover:text-inherit font-mono text-base transition-colors'>Diploma</span>
                         </Link>
-                        <Link href={"/account"} className='flex p-4 gap-2.5 group  hover:bg-blue-100 hover:border border-blue-600 transition-all'>
-                            <UserRound className='size-6 text-gray-500 group-hover:text-blue-600 transition-colors' />
-                            <span className='text-gray-500 group-hover:text-blue-600 font-mono text-base transition-colors'>Account</span>
+                        <Link href={"/account"} className={cn("flex p-4 gap-2.5 group  transition-all",
+                            isAdmin ? "hover:bg-gray-700 border border-transparent hover:border-gray-400 text-white" : "hover:bg-blue-100 border border-transparent hover:border-blue-600 hover:text-blue-600"
+                        )}>
+                            <UserRound className='size-6 text-inherit group-hover:text-inherit transition-colors' />
+                            <span className='text-inherit group-hover:text-inherit font-mono text-base transition-colors'>Account</span>
                         </Link>
                     </div>
 

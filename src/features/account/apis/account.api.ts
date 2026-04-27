@@ -1,9 +1,9 @@
 import { HEADERS } from "@/src/shared/constant/api.constant";
 import { RESPONSES } from "@/src/shared/constant/api.responses";
-import { IApiResponse, IErrorResponse } from "@/src/shared/lib/types/api";
+import { IApiResponse, IErrorResponse, IResponseMessage } from "@/src/shared/lib/types/api";
 import { getToken } from "next-auth/jwt";
 import { NextRequest } from "next/server";
-import { IConfirmEmailResponse, IPayloadEmailConfirm, IPayloadEmailRequest, IPayloadUpdatedProfile, IProfile, IRequestEmailResponse } from "../types/account";
+import { IConfirmEmailResponse, IPayloadEmailConfirm, IPayloadEmailRequest, IPayloadChangePassword, IPayloadUpdatedProfile, IProfile, IRequestEmailResponse } from "../types/account";
 
 
 
@@ -129,3 +129,27 @@ export const confirmEmail = async ({ req, body }: { req: NextRequest; body: IPay
 
     return data
 }
+export const resetPassword = async ({ req, body }: { req: NextRequest; body: IPayloadChangePassword; }) => {
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized as IErrorResponse
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/change-password`, {
+        method: "POST",
+        headers: {
+            ...HEADERS.JsonBody,
+            ...HEADERS.authorize(token.token)
+        },
+        body: JSON.stringify(body),
+    })
+
+
+    const data: IApiResponse<IResponseMessage> = await res.json()
+
+    if (!res.ok) {
+        throw new Error(data.message || "Something went wrong");
+    }
+
+    return data
+}
+

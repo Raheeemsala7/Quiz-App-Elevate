@@ -1,8 +1,8 @@
-import React from 'react'
+import ResetPassword from '@/src/features/account/_components/reset-password'
 
 const page = () => {
   return (
-    <div>page</div>
+    <ResetPassword />
   )
 }
 

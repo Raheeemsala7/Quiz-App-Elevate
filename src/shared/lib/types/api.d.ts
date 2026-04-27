@@ -33,3 +33,7 @@ export interface ITimeStamp {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface IResponseMessage {
+    message:string
+}

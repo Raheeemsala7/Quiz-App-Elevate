@@ -2,7 +2,7 @@
 
 import { IApiResponse, IErrorResponse } from "@/src/shared/lib/types/api"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { IPayloadUpdatedProfile, IProfile } from "../types/account"
+import { IPayloadChangePassword, IPayloadUpdatedProfile, IProfile } from "../types/account"
 
 
 
@@ -103,7 +103,7 @@ export const useChangeEmailRequest = () => {
                 body: JSON.stringify(data)
             })
             const result = await response.json();
-            
+
             if (!response.ok) {
                 const error: IErrorResponse = {
                     status: false,
@@ -114,10 +114,10 @@ export const useChangeEmailRequest = () => {
 
                 const err = new Error(error.message) as Error & IErrorResponse;
                 Object.assign(err, error);
-                
+
                 throw err;
             }
-            
+
             return result
         }
     })
@@ -153,6 +153,36 @@ export const useChangeEmailConfirm = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["account"] })
+        }
+    })
+}
+
+
+export const useResetPassword = () => {
+
+    return useMutation({
+        mutationFn: async (data: IPayloadChangePassword) => {
+            const response = await fetch("/api/reset-password", {
+                method: "POST",
+                body: JSON.stringify(data)
+            })
+            const result = await response.json();
+
+            if (!response.ok) {
+                const error: IErrorResponse = {
+                    status: false,
+                    code: result.code || response.status,
+                    message: result.message || "Request failed",
+                    errors: result.errors || [],
+                };
+
+                const err = new Error(error.message) as Error & IErrorResponse;
+                Object.assign(err, error);
+
+                throw err;
+            }
+
+            return result
         }
     })
 }

@@ -41,5 +41,28 @@ export const emailRequestSchema = z.object({
         .string()
         .email('Please enter a valid email address')
         .min(1, 'Email is required'),
-    })
-    export type EmailRequestType = z.infer<typeof emailRequestSchema>;
+})
+export type EmailRequestType = z.infer<typeof emailRequestSchema>;
+
+export const resetPasswordSchema = z.object({
+    currentPassword: z
+        .string()
+        .min(8, 'Password must be at least 8 characters')
+        .regex(/(?=.*[a-z])/, 'Password must contain at least one lowercase letter')
+        .regex(/(?=.*[A-Z])/, 'Password must contain at least one uppercase letter')
+        .regex(/(?=.*\d)/, 'Password must contain at least one number')
+        .regex(/(?=.*[@$!%*?&])/, 'Password must contain at least one special character'),
+    newPassword: z
+        .string()
+        .min(8, 'Password must be at least 8 characters')
+        .regex(/(?=.*[a-z])/, 'Password must contain at least one lowercase letter')
+        .regex(/(?=.*[A-Z])/, 'Password must contain at least one uppercase letter')
+        .regex(/(?=.*\d)/, 'Password must contain at least one number')
+        .regex(/(?=.*[@$!%*?&])/, 'Password must contain at least one special character'),
+
+    confirmPassword: z.string(),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+    message: "كلمة السر غير متطابقة",
+    path: ["confirmPassword"],
+})
+    export type ResetPasswordType = z.infer<typeof resetPasswordSchema>;
