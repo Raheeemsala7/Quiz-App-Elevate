@@ -1,9 +1,9 @@
 "use client"
 
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { DIPLOMA_KEYS } from "../apis/diploma.options";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { DIPLOMA_KEYS, DIPLOMA_KEYS_ADMIN } from "../apis/diploma.options";
 import { useSearchParams } from "next/navigation";
-import { DEFAULT_LIMIT_DIPLOMA } from "@/src/shared/constant/api.constant";
+import { DEFAULT_LIMIT_DIPLOMA, DEFAULT_LIMIT_DIPLOMA_ADMIN } from "@/src/shared/constant/api.constant";
 import { IApiResponse, IPagination } from "@/src/shared/lib/types/api";
 import { IDiploma } from "../types/diploma";
 
@@ -43,3 +43,30 @@ export const useDiplomasInfinite = () => {
     })
 };
 
+
+export const useDiplomasAdmin = () => {
+    const searchParams = useSearchParams();
+
+    const page = Number(searchParams.get("page")) || 1;
+    const limit = Number(searchParams.get("limit")) || DEFAULT_LIMIT_DIPLOMA_ADMIN;
+    const search = searchParams.get("search") || "";
+    const sortBy = searchParams.get("sortBy") || "createdAt";
+    const sortOrder = searchParams.get("sortOrder") || "desc";
+
+    return useQuery({
+        queryKey: DIPLOMA_KEYS_ADMIN.list(page, limit ,search, sortBy, sortOrder),
+        queryFn: async () => {
+            const res = await fetch(
+                `/api/diploma?page=${page}&limit=${limit}&search=${search}&sortBy=${sortBy}&sortOrder=${sortOrder}`
+            );
+
+            const data: IApiResponse<IPagination<IDiploma>> = await res.json();
+
+            if (!data.status) {
+                throw new Error(data.message || "Error");
+            }
+
+            return data.payload;
+        },
+    });
+};
