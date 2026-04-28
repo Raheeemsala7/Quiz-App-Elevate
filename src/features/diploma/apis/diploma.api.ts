@@ -93,3 +93,34 @@ export const getDiplomaApi = async (id: string) => {
     return data as IApiResponse<{ diploma: IDiploma }>;
 
 }
+
+
+export const getDiplomasMinimalApi = async (req: NextRequest) => {
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized;
+
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/diplomas?page=1&limit=100`,
+        {
+            headers: {
+                ...HEADERS.authorize(token.token),
+            },
+        }
+    );
+
+
+    const data : IApiResponse<IPagination<IDiploma>> = await res.json();
+
+        if (!data.status) {
+        throw new Error(data.message || "Something went wrong");
+    }
+
+    return {
+        ...data,
+        payload: data.payload.data.map((d: IDiploma) => ({
+            id: d.id,
+            title: d.title,
+        })),
+    };
+};

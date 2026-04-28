@@ -54,7 +54,7 @@ export const useDiplomasAdmin = () => {
     const sortOrder = searchParams.get("sortOrder") || "desc";
 
     return useQuery({
-        queryKey: DIPLOMA_KEYS_ADMIN.list(page, limit ,search, sortBy, sortOrder),
+        queryKey: DIPLOMA_KEYS_ADMIN.list(page, limit, search, sortBy, sortOrder),
         queryFn: async () => {
             const res = await fetch(
                 `/api/diploma?page=${page}&limit=${limit}&search=${search}&sortBy=${sortBy}&sortOrder=${sortOrder}`
@@ -68,5 +68,40 @@ export const useDiplomasAdmin = () => {
 
             return data.payload;
         },
+    });
+};
+
+
+
+type MinimalDiploma = {
+    id: string;
+    title: string;
+};
+
+export const useDiplomasFilter = () => {
+    return useQuery({
+        queryKey: ["diplomas-filter"],
+
+        queryFn: async () => {
+            const res = await fetch("/api/diploma/minimal?page=1&limit=100");
+
+            const data: IApiResponse<IDiploma[]> = await res.json();
+
+
+            if (!data.status) {
+                throw new Error(data.message || "Failed to fetch diplomas");
+            }
+
+            const formatted: MinimalDiploma[] = data.payload.map(
+                (diploma) => ({
+                    id: diploma.id,
+                    title: diploma.title,
+                })
+            );
+
+            return formatted;
+        },
+
+        staleTime: 1000 * 60 * 10, 
     });
 };

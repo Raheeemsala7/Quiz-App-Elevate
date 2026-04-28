@@ -1,44 +1,77 @@
-import { IApiResponse, IPagination } from "@/src/shared/lib/types/api"
+import { IApiResponse, IErrorResponse, IPagination } from "@/src/shared/lib/types/api"
 import { IExam, IExamInfo } from "../types/exam"
 import { NextRequest, userAgent } from "next/server"
 import { getToken } from "next-auth/jwt"
 import { RESPONSES } from "@/src/shared/constant/api.responses"
-import { DEFAULT_LIMIT_DIPLOMA, HEADERS } from "@/src/shared/constant/api.constant"
+import { DEFAULT_LIMIT_DIPLOMA, DEFAULT_LIMIT_DIPLOMA_ADMIN, HEADERS } from "@/src/shared/constant/api.constant"
 import { getNextAuthToken } from "../../auth/util/auth.util"
 
 
-export const getExams = async (req: NextRequest) => {
+export const getExamsApi = async (req: NextRequest) => {
+    const { device } = userAgent(req);
 
-    const { device } = await userAgent(req)
+    const diplomaId = req.nextUrl.searchParams.get("diplomaId") || "";
 
-    const diplomaId = req.nextUrl.searchParams.get("diplomaId")
     const page = Number(req.nextUrl.searchParams.get("page")) || 1;
-    const limit = device.type === "mobile" ? 3 : device.type === "tablet" ? 4 : Number(req.nextUrl.searchParams.get("limit")) || DEFAULT_LIMIT_DIPLOMA;
-
-    console.log("###############################")
-    console.log("diploma server" + diplomaId)
-    console.log("###############################")
 
 
-    const token = await getToken({ req })
+    const limit =
+        device.type === "mobile"
+            ? 3
+            : device.type === "tablet"
+                ? 4
+                : DEFAULT_LIMIT_DIPLOMA_ADMIN || DEFAULT_LIMIT_DIPLOMA;
 
-    if (!token) return RESPONSES.unauthorized
+    // Queries
+    const search = req.nextUrl.searchParams.get("search")?.trim() || "";
+    const sortBy = req.nextUrl.searchParams.get("sortBy") || "createdAt";
+    const sortOrder = req.nextUrl.searchParams.get("sortOrder") || "desc";
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/exams?diplomaId=${diplomaId}&page=${page}&limit=${limit}`, {
-        method: "GET",
-        headers: {
-            ...HEADERS.authorize(token.token)
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized;
+
+    // ✅ validation
+    const allowedSortBy = ["title", "createdAt", "questions"];
+    const allowedSortOrder = ["asc", "desc"];
+
+    const finalSortBy = allowedSortBy.includes(sortBy)
+        ? sortBy
+        : "createdAt";
+
+    const finalSortOrder = allowedSortOrder.includes(sortOrder)
+        ? sortOrder
+        : "desc";
+
+    // 🌐 build query
+    const query = new URLSearchParams({
+        page: String(page),
+        limit: String(limit),
+        sortBy: finalSortBy,
+        sortOrder: finalSortOrder,
+    });
+
+    if (search) query.append("search", search);
+    if (diplomaId) query.append("diplomaId", diplomaId);
+
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/exams?${query.toString()}`,
+        {
+            method: "GET",
+            headers: {
+                ...HEADERS.authorize(token.token),
+            },
         }
-    })
+    );
 
-    const data: IApiResponse<IPagination<IExam>> = await res.json()
+    const data: IApiResponse<IPagination<IExam>> = await res.json();
 
     if (!res.ok) {
         throw new Error(data.message || "Something went wrong");
     }
-    return data as IApiResponse<IPagination<IExam>>;
 
-}
+    return data;
+};
 
 
 export const getExamById = async (examId: string) => {
@@ -63,5 +96,8 @@ export const getExamById = async (examId: string) => {
     }
 
 
-    return data.payload 
+    return data.payload
 }
+
+
+

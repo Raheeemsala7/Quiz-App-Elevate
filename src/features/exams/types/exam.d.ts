@@ -7,6 +7,11 @@ export interface IExam {
   diplomaId: string;
   createdAt: string;
   updatedAt: string;
+  questionsCount:number;
+  diploma: {
+    id: string;
+    title: string
+  }
 }
 
 
