@@ -8,30 +8,52 @@ import { NextRequest } from "next/server"
 
 
 
-export const getQuestions = async (examId: string) => {
-
-    const token = await getNextAuthToken()
+export const getQuestions = async (
+    examId: string,
+    options?: {
+        search?: string;
+        sortBy?: "title" | "createdAt";
+        sortOrder?: "asc" | "desc";
+    }
+) => {
+    const token = await getNextAuthToken();
 
     if (!token) {
-        throw new Error("No token provided")
+        throw new Error("No token provided");
     }
 
+    const query = new URLSearchParams();
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions/exam/${examId}`, {
-        headers: {
-            ...HEADERS.authorize(token.token)
+    if (options?.search?.trim()) {
+        query.append("search", options.search.trim());
+    }
+
+    if (options?.sortBy) {
+        query.append("sortBy", options.sortBy);
+    }
+
+    if (options?.sortOrder) {
+        query.append("sortOrder", options.sortOrder);
+    }
+
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/questions/exam/${examId}?${query.toString()}`,
+        {
+            headers: {
+                ...HEADERS.authorize(token.token),
+            },
+            cache: "no-store", // مهم علشان دايمًا يجيب أحدث بيانات
         }
-    })
+    );
 
-    const data: IApiResponse<IQuestion> = await res.json()
+    const data: IApiResponse<IQuestion> = await res.json();
 
     if (!data.status) {
         throw new Error(data.message || "Something went wrong");
     }
 
-
-    return data.payload
-}
+    return data.payload;
+};
 
 
 

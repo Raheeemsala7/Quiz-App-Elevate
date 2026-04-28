@@ -48,15 +48,6 @@ const ExamsTable = ({ exams, isFetching, isLoading, isPending }: IProps) => {
     router.push(`?${params.toString()}`);
   };
 
-
-  console.log("Boolean " + isFetching && isLoading && isPending)
-
-  // if (exams?.length === 0) {
-  //   return (
-  //     
-  //   );
-  // }
-
   return (
     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
       <div className="overflow-x-auto">

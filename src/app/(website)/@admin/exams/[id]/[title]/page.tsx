@@ -1,27 +1,41 @@
 import { getExamById } from '@/src/features/exams/apis/exams.api';
+import QuestionsList from '@/src/features/questions/_components/questions-list';
 import { Button, buttonVariants } from '@/src/shared/components/ui/button';
 import { cn } from '@/src/shared/lib/utils';
 import { Ban, PenLine, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import slugify from 'slugify'
+
+
 
 interface IProps {
   params: Promise<{
     id: string;
     title: string;
-  }>
+  }>;
+  searchParams: {
+    search?: string;
+    sortBy?: "title" | "createdAt";
+    sortOrder?: "asc" | "desc";
+  };
 }
 
-const page = async ({ params }: IProps) => {
+const page = async ({ params , searchParams}: IProps) => {
 
   let { id, title } = await params
 
   const data = await getExamById(id)
 
+  const sp = await searchParams
+
 
 
   const exam = data.exam
+
+  console.log("Server searchParams:", sp); // 👈 لازم يتغير
+
 
 
 
@@ -34,7 +48,7 @@ const page = async ({ params }: IProps) => {
             <Ban />
             Immutable
           </Button>
-          <Link className={cn(buttonVariants() , "font-mono p-4 gap-2.5 bg-blue-600")} href={`/${exam.id}/${slugify(exam.title, { lower: false })}/edit`}>
+          <Link className={cn(buttonVariants(), "font-mono p-4 gap-2.5 bg-blue-600")} href={`/${exam.id}/${slugify(exam.title, { lower: false })}/edit`}>
             <PenLine />
             Edit
           </Link>
@@ -72,6 +86,11 @@ const page = async ({ params }: IProps) => {
             <p className='text-gray-400 mb-1 font-mono'>No. of Questions</p>
             <p className='font-mono'>{exam.questionsCount}</p>
           </div>
+        </div>
+
+        <div className="mt-4">
+
+            <QuestionsList id={id} title={title}    searchParams={sp}/>
         </div>
       </div>
     </>
