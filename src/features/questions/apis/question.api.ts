@@ -1,5 +1,5 @@
 import { IApiResponse, IErrorResponse } from "@/src/shared/lib/types/api"
-import { IPayloadSubmissions, IQuestion, IResponseSubmissions } from "../types/questions"
+import { IPayloadSubmissions, IQuestion, IQuestionInfo, IResponseSubmissions } from "../types/questions"
 import { HEADERS } from "@/src/shared/constant/api.constant"
 import { getNextAuthToken } from "../../auth/util/auth.util"
 import { getToken } from "next-auth/jwt"
@@ -8,7 +8,7 @@ import { NextRequest } from "next/server"
 
 
 
-export const getQuestions = async (
+export const getQuestionsApi = async (
     examId: string,
     options?: {
         search?: string;
@@ -18,9 +18,8 @@ export const getQuestions = async (
 ) => {
     const token = await getNextAuthToken();
 
-    if (!token) {
-        throw new Error("No token provided");
-    }
+    if (!token) return RESPONSES.unauthorized;
+
 
     const query = new URLSearchParams();
 
@@ -42,7 +41,7 @@ export const getQuestions = async (
             headers: {
                 ...HEADERS.authorize(token.token),
             },
-            cache: "no-store", // مهم علشان دايمًا يجيب أحدث بيانات
+            cache: "no-store",
         }
     );
 
@@ -55,6 +54,26 @@ export const getQuestions = async (
     return data.payload;
 };
 
+
+export const getQuestionApi = async (questionId: string)  => {
+
+    const token = await getNextAuthToken();
+
+    if (!token) return RESPONSES.unauthorized;
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions/${questionId}`, {
+        headers: {
+            ...HEADERS.authorize(token.token)
+        }
+    })
+
+    const data: IApiResponse<IQuestionInfo> = await res.json()
+
+    if (!data.status) {
+        throw new Error(data.message || "Something went wrong");
+    }
+    return data as IApiResponse<IQuestionInfo>
+}
 
 
 export const postSubmissions = async ({ req, body }: { req: NextRequest; body: IPayloadSubmissions; }) => {

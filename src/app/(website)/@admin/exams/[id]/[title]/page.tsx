@@ -1,4 +1,5 @@
 import { getExamById } from '@/src/features/exams/apis/exams.api';
+import { IExamInfo } from '@/src/features/exams/types/exam';
 import MenubarSortQuestion from '@/src/features/questions/_components/menubar-sort-questions';
 import QuestionsList from '@/src/features/questions/_components/questions-list';
 import { Button, buttonVariants } from '@/src/shared/components/ui/button';
@@ -31,14 +32,7 @@ const page = async ({ params, searchParams }: IProps) => {
 
   const sp = await searchParams
 
-
-
   const exam = data.exam
-
-  console.log("Server searchParams:", sp); // 👈 لازم يتغير
-
-
-
 
   return (
     <>

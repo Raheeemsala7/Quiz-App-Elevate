@@ -77,9 +77,8 @@ export const getExamsApi = async (req: NextRequest) => {
 export const getExamById = async (examId: string) => {
     const token = await getNextAuthToken()
 
-    if (!token) {
-        throw new Error("No token provided")
-    }
+    if (!token) throw new Error("No token provided.")
+    
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/exams/${examId}`, {
         method: "GET",
@@ -96,7 +95,7 @@ export const getExamById = async (examId: string) => {
     }
 
 
-    return data.payload
+    return data.payload  
 }
 
 
