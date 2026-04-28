@@ -19,9 +19,8 @@ const page = async ({ params }: {
 
     console.log(id, title, questionId, questionTitle)
 
-    const questionInfo = await getQuestionApi(id)
+    const questionInfo = await getQuestionApi(questionId)
 
-    console.log(questionInfo)
 
 
     return (
@@ -52,21 +51,20 @@ const page = async ({ params }: {
 
             <div className="p-6">
                 <div className="bg-white p-4">
-                    <p className='text-gray-400 mb-4 font-mono'>Image</p>
 
 
-                    {/* <div className="mt-4">
+                    <div className="mt-4">
                         <p className='text-gray-400 mb-1 font-mono'>Headline</p>
-                        <h6 className='font-mono'>{exam.title}</h6>
+                        <h6 className='font-mono'>{questionInfo.question.text}</h6>
                     </div>
                     <div className="mt-4">
                         <p className='text-gray-400 mb-1 font-mono'>Exam</p>
-                        <p className='font-mono'>{exam.description}</p>
+                        <p className='font-mono'>{questionInfo.question.exam.title}</p>
                     </div>
                     <div className="mt-4">
                         <p className='text-gray-400 mb-1 font-mono'>Answer</p>
-                        <p className='font-mono'>{exam.diploma.title}</p>
-                    </div> */}
+                        <p className='font-mono'>{questionInfo.question.answers.length}</p>
+                    </div>
 
                 </div>
 

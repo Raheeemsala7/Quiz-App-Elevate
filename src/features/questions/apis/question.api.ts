@@ -59,7 +59,7 @@ export const getQuestionApi = async (questionId: string)  => {
 
     const token = await getNextAuthToken();
 
-    if (!token) return RESPONSES.unauthorized;
+    if (!token) throw new Error("No token provided.")
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions/${questionId}`, {
         headers: {
@@ -72,7 +72,7 @@ export const getQuestionApi = async (questionId: string)  => {
     if (!data.status) {
         throw new Error(data.message || "Something went wrong");
     }
-    return data as IApiResponse<IQuestionInfo>
+    return data.payload as IQuestionInfo
 }
 
 
