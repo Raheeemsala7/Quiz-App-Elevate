@@ -1,8 +1,9 @@
 import { getExamById } from '@/src/features/exams/apis/exams.api';
+import MenubarSortQuestion from '@/src/features/questions/_components/menubar-sort-questions';
 import QuestionsList from '@/src/features/questions/_components/questions-list';
 import { Button, buttonVariants } from '@/src/shared/components/ui/button';
 import { cn } from '@/src/shared/lib/utils';
-import { Ban, PenLine, Trash2 } from 'lucide-react';
+import { Ban, PenLine, Plus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
@@ -22,7 +23,7 @@ interface IProps {
   };
 }
 
-const page = async ({ params , searchParams}: IProps) => {
+const page = async ({ params, searchParams }: IProps) => {
 
   let { id, title } = await params
 
@@ -89,8 +90,20 @@ const page = async ({ params , searchParams}: IProps) => {
         </div>
 
         <div className="mt-4">
-
-            <QuestionsList id={id} title={title}    searchParams={sp}/>
+          <div className='flex justify-between items-center bg-blue-600 p-2.5'>
+            <p className='text-white'>Exam Questions</p>
+            <Link href={`/exams/${id}/create-add-question`} className='text-white font-mono flex items-center gap-2 text-base'>
+              <Plus />
+              Add Questions
+            </Link>
+          </div>
+          <div className='flex justify-between items-center bg-gray-200 p-4'>
+            <p className='text-black'>Title</p>
+            <MenubarSortQuestion />
+          </div>
+          <Suspense fallback={<p>Loading...</p>}>
+            <QuestionsList id={id} title={title} searchParams={sp} />
+          </Suspense>
         </div>
       </div>
     </>

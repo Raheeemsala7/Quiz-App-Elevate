@@ -4,9 +4,9 @@ import { Menubar, MenubarContent, MenubarGroup, MenubarItem, MenubarMenu, Menuba
 import { useRouter, useSearchParams } from 'next/navigation';
 
 const MenubarSortQuestion = () => {
-      const router = useRouter();
-      const searchParams = useSearchParams();
-      
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
     const setSort = (sortBy: string, sortOrder: string) => {
         const params = new URLSearchParams(searchParams.toString());
 
@@ -16,7 +16,9 @@ const MenubarSortQuestion = () => {
         params.set("sortOrder", sortOrder);
         params.set("page", "1"); // مهم
 
-        router.push(`?${params.toString()}`);
+        router.push(`?${params.toString()}`, {
+            scroll: false
+        });
     };
     return (
         <Menubar>

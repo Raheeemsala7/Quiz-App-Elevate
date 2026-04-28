@@ -36,7 +36,9 @@ const DiplomaTable = ({ diplomas }: { diplomas: IDiploma[] }) => {
     params.set("sortOrder", sortOrder);
     params.set("page", "1"); // مهم
 
-    router.push(`?${params.toString()}`);
+    router.push(`?${params.toString()}`,  {
+            scroll: false
+        });
   };
 
 

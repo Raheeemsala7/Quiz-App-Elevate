@@ -33,18 +33,7 @@ const QuestionsList = async ({ id, title, searchParams }: IProps) => {
 
 
     return (
-        <div>
-            <div className='flex justify-between items-center bg-blue-600 p-2.5'>
-                <p className='text-white'>Exam Questions</p>
-                <Link href={`/exams/${id}/create-add-question`} className='text-white font-mono flex items-center gap-2 text-base'>
-                    <Plus />
-                    Add Questions
-                </Link>
-            </div>
-            <div className='flex justify-between items-center bg-gray-200 p-4'>
-                <p className='text-black'>Title</p>
-                <MenubarSortQuestion />
-            </div>
+            
             <div>
                 {questions.questions.map((que) => (
                     <div className='bg-white px-4 py-2.5 flex justify-between' key={que.id}>
@@ -94,7 +83,6 @@ const QuestionsList = async ({ id, title, searchParams }: IProps) => {
                     </div>
                 ))}
             </div>
-        </div>
     )
 }
 
