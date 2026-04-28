@@ -3,12 +3,11 @@ import { authOptions } from '@/src/auth'
 import Breadcrumb from '@/src/shared/components/breadcrumb'
 import LogoApp from '@/src/shared/components/icons/Logo'
 import SignOutButton from '@/src/shared/components/signOutButton'
-import { Avatar, AvatarFallback, AvatarImage } from '@/src/shared/components/ui/avatar'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/src/shared/components/ui/dropdown-menu'
+import { Avatar, AvatarFallback } from '@/src/shared/components/ui/avatar'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/src/shared/components/ui/dropdown-menu'
 import { cn } from '@/src/shared/lib/utils'
-import { Bolt, EllipsisIcon, GraduationCap, HomeIcon, LogOutIcon, UserRound } from 'lucide-react'
+import { Bolt, BookOpenCheck, EllipsisIcon, GraduationCap, UserRound } from 'lucide-react'
 import { getServerSession } from 'next-auth'
-import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -24,7 +23,6 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
     const userData = await getServerSession(authOptions)
     const isAdmin = userData?.user.role === "ADMIN" ? true : false
 
-    console.log(userData?.user.role)
 
 
 
@@ -47,6 +45,14 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
                             <GraduationCap className='size-6 text-inherit group-hover:text-inherit transition-colors' />
                             <span className='text-inherit group-hover:text-inherit font-mono text-base transition-colors'>Diploma</span>
                         </Link>
+                        {isAdmin && (
+                        <Link href={"/exams"} className={cn("flex p-4 gap-2.5 group  transition-all",
+                            isAdmin ? "hover:bg-gray-700 border border-transparent hover:border-gray-400 text-white" : "hover:bg-blue-100 border border-transparent hover:border-blue-600 hover:text-blue-600"
+                        )}>
+                            <BookOpenCheck className='size-6 text-inherit group-hover:text-inherit transition-colors' />
+                            <span className='text-inherit group-hover:text-inherit font-mono text-base transition-colors'>Exams</span>
+                        </Link>
+                        )}
                         <Link href={"/account"} className={cn("flex p-4 gap-2.5 group  transition-all",
                             isAdmin ? "hover:bg-gray-700 border border-transparent hover:border-gray-400 text-white" : "hover:bg-blue-100 border border-transparent hover:border-blue-600 hover:text-blue-600"
                         )}>
@@ -110,7 +116,7 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
             <main className='w-full bg-[#F9FAFB] space-y-6 flex flex-col'>
                 <Breadcrumb />
 
-                <div className='p-6 flex-col flex flex-1'>
+                <div className=' flex-col flex flex-1'>
                     {isAdmin ? admin : user}
                 </div>
 

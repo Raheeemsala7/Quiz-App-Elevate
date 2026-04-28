@@ -4,6 +4,8 @@ import { NextRequest, userAgent } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { RESPONSES } from "@/src/shared/constant/api.responses";
 import { IDiploma } from "../types/diploma";
+import { getServerSession } from "next-auth";
+import { getNextAuthToken } from "../../auth/util/auth.util";
 
 
 
@@ -67,4 +69,27 @@ export const getDiplomasApi = async (req: NextRequest): Promise<IApiResponse<IPa
         throw new Error(data.message || "Something went wrong");
     }
     return data as IApiResponse<IPagination<IDiploma>>;
+}
+
+
+
+export const getDiplomaApi = async (id: string) => {
+
+    const token = await getNextAuthToken()
+
+    if (!token) return RESPONSES.unauthorized as IErrorResponse
+
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diplomas/${id}`, {
+        headers: {
+            ...HEADERS.authorize(token.token)
+        }
+    })
+
+    const data: IApiResponse<{ diploma: IDiploma }> = await res.json();
+    if (!data.status) {
+        throw new Error(data.message || "Something went wrong");
+    }
+    return data as IApiResponse<{ diploma: IDiploma }>;
+
 }

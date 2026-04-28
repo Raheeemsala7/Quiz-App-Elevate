@@ -1,7 +1,7 @@
-import { IDiploma } from "@/src/shared/lib/types/diploma"
 import Image from "next/image"
 import Link from "next/link"
 import slugify from "slugify";
+import { IDiploma } from "../types/diploma";
 
 
 

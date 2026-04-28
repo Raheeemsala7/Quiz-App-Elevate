@@ -15,11 +15,13 @@ const AdminComponents = () => {
 
 
     return (
-        <div>
+        <>
             <PaginationDiplomas currentPage={diplomasMeta?.page || 1} limit={diplomasMeta?.limit || 12} totalItems={diplomasMeta?.total || 12} totalPages={diplomasMeta?.totalPages || 1} />
-            <SearchFilters />
-            <DiplomaTable diplomas={diplomasData || []} />
-        </div>
+            <div className='p-6'>
+                <SearchFilters />
+                <DiplomaTable diplomas={diplomasData || []} />
+            </div>
+        </>
     )
 }
 

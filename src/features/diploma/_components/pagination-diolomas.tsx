@@ -12,7 +12,7 @@ type IProps = {
 
 };
 
-export function PaginationDiplomas({ currentPage, totalItems, totalPages ,limit }: IProps) {
+export function PaginationDiplomas({ currentPage, totalItems, totalPages, limit }: IProps) {
 
     const searchParams = useSearchParams()
     const router = useRouter()
@@ -29,35 +29,36 @@ export function PaginationDiplomas({ currentPage, totalItems, totalPages ,limit 
     };
 
     return (
-        <div className="flex items-center justify-between mt-4 px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
-            <div className="text-sm text-gray-600">
+        <div className="flex items-center justify-start gap-4 px-4 py-3 bg-white border border-gray-200">
+            <div className="text-sm text-gray-800 font-mono">
                 <span className="font-semibold text-gray-800">{startItem}</span> - <span className="font-semibold text-gray-800">{endItem}</span> of {' '}
                 <span className="font-semibold text-gray-800">{totalItems}</span>
             </div>
 
-            <div className="text-sm text-gray-600">
-                Page <span className="font-semibold text-gray-800">{currentPage}</span> of{' '}
-                <span className="font-semibold text-gray-800">{totalPages}</span>
-            </div>
 
-            <div className="flex gap-1">
+
+            <div className="flex gap-3 items-center border border-gray-200">
                 <Button
                     variant="outline"
                     size="sm"
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="px-2"
+                    className="px-2 bg-gray-200 rounded-none size-10"
                 >
-                    <ChevronLeft size={16} />
+                    <ChevronLeft size={18} />
                 </Button>
+                <div className="text-sm text-gray-400 ">
+                    Page <span>{currentPage}</span> of{' '}
+                    <span>{totalPages}</span>
+                </div>
                 <Button
                     variant="outline"
                     size="sm"
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="px-2"
+                    className="px-2 bg-gray-200 rounded-none size-10"
                 >
-                    <ChevronRight size={16} />
+                    <ChevronRight size={18} />
                 </Button>
             </div>
         </div>

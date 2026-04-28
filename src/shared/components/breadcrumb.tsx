@@ -22,7 +22,7 @@ export default function Breadcrumb() {
     const labels = ["Diploma", ...filtered.map(formatSegment)];
 
     return (
-        <div className="text-sm text-gray-500 bg-white p-4">
+        <div className="text-sm text-gray-500 bg-white p-4 mb-0">
             {labels.join(" / ")}
         </div>
     );
