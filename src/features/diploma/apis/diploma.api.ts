@@ -4,7 +4,6 @@ import { NextRequest, userAgent } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { RESPONSES } from "@/src/shared/constant/api.responses";
 import { IDiploma } from "../types/diploma";
-import { getServerSession } from "next-auth";
 import { getNextAuthToken } from "../../auth/util/auth.util";
 
 
@@ -13,7 +12,6 @@ export const getDiplomasApi = async (req: NextRequest): Promise<IApiResponse<IPa
 
 
     const { device } = userAgent(req)
-
 
 
     const token = await getToken({ req });
