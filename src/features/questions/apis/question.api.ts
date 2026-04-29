@@ -18,7 +18,7 @@ export const getQuestionsApi = async (
 ) => {
     const token = await getNextAuthToken();
 
-    if (!token) return RESPONSES.unauthorized;
+    if (!token) throw new Error("No token provided.") 
 
 
     const query = new URLSearchParams();
@@ -51,7 +51,7 @@ export const getQuestionsApi = async (
         throw new Error(data.message || "Something went wrong");
     }
 
-    return data.payload;
+    return data.payload  as IQuestion;
 };
 
 
