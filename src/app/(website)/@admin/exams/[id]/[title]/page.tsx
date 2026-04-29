@@ -32,7 +32,17 @@ const page = async ({ params, searchParams }: IProps) => {
 
   const sp = await searchParams
 
+  if (!data || !data.exam) {
+  return (
+    <div className="p-6">
+      <h2>Exam not found</h2>
+    </div>
+  )
+}
+
   const exam = data.exam
+
+
 
   return (
     <>
