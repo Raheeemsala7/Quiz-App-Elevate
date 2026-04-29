@@ -87,6 +87,8 @@ export const getExamById = async (examId: string) => {
         }
     })
 
+    console.log(process.env.NEXT_PUBLIC_API_URL)
+
 
     const data: IApiResponse<IExamInfo> = await res.json()
 
