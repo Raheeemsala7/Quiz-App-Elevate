@@ -7,3 +7,8 @@ export interface IDiploma extends ITimeStamp {
   createdAt: string;
   updatedAt: string;
 }
+
+export type MinimalDiploma = {
+    id: string;
+    title: string;
+};

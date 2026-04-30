@@ -86,7 +86,6 @@ export const postSubmissions = async ({ req, body }: { req: NextRequest; body: I
         method: "POST",
         body: JSON.stringify(body),
         headers: {
-            ...HEADERS.JsonBody,
             ...HEADERS.authorize(token.token)
         }
     })

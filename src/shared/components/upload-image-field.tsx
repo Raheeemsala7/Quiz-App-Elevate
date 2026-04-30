@@ -77,11 +77,9 @@ const UploadImageField = () => {
             render={({ field: { value: _value, onChange, ...field }, fieldState }) => (
                 <Field>
                     <FieldLabel className="font-mono">
-                        Description
+                        Image
                     </FieldLabel>
                     <div>
-
-
                         {uploadedImage && preview ? (
                             <div className="p-1.5 flex items-center gap-2 bg-gray-50 border border-gray-200 cursor-pointer">
 

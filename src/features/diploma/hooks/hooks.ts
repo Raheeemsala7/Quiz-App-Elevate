@@ -1,11 +1,12 @@
 "use client"
 
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { DIPLOMA_KEYS, DIPLOMA_KEYS_ADMIN } from "../apis/diploma.options";
 import { useSearchParams } from "next/navigation";
-import { DEFAULT_LIMIT_DIPLOMA, DEFAULT_LIMIT_DIPLOMA_ADMIN } from "@/src/shared/constant/api.constant";
+import { DEFAULT_LIMIT_DIPLOMA, DEFAULT_LIMIT_DIPLOMA_ADMIN, HEADERS } from "@/src/shared/constant/api.constant";
 import { IApiResponse, IPagination } from "@/src/shared/lib/types/api";
-import { IDiploma } from "../types/diploma";
+import { IDiploma, MinimalDiploma } from "../types/diploma";
+import { CreateDiplomaType } from "../schema/diploma.schema";
 
 
 
@@ -73,10 +74,7 @@ export const useDiplomasAdmin = () => {
 
 
 
-type MinimalDiploma = {
-    id: string;
-    title: string;
-};
+
 
 export const useDiplomasFilter = () => {
     return useQuery({
@@ -102,6 +100,38 @@ export const useDiplomasFilter = () => {
             return formatted;
         },
 
-        staleTime: 1000 * 60 * 10, 
+        staleTime: 1000 * 60 * 10,
     });
 };
+
+
+
+export const useCreateDiploma = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async (values: CreateDiplomaType) => {
+            const res = await fetch('/api/diploma', {
+                method: "POST",
+                body: JSON.stringify(values),
+                headers: {
+                    ...HEADERS.JsonBody
+                }
+            })
+
+            const data: IApiResponse<IDiploma> = await res.json()
+
+            if (!data.status) {
+                throw new Error(data.message || "Something wrong")
+            }
+            return data
+        },
+        onSuccess(data) {
+            console.log(data)
+            queryClient.invalidateQueries({ queryKey: ["diplomas-admin"] })
+
+        },
+        onError(error) {
+            console.log(error)
+        }
+    })
+}

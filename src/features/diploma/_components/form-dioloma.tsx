@@ -7,11 +7,16 @@ import { Input } from '@/src/shared/components/ui/input'
 import { cn } from '@/src/shared/lib/utils'
 import { Button, buttonVariants } from '@/src/shared/components/ui/button'
 import Link from 'next/link'
-import { SaveIcon, X } from 'lucide-react'
+import { Loader2, SaveIcon, X } from 'lucide-react'
 import UploadImageField from '@/src/shared/components/upload-image-field'
+import { useCreateDiploma } from '../hooks/hooks'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+import { Textarea } from '@/src/shared/components/ui/textarea'
 
 const FormDiploma = () => {
 
+    const { mutate, isPending } = useCreateDiploma()
     const form = useForm<CreateDiplomaType>({
         resolver: zodResolver(createDiplomaSchema),
         defaultValues: {
@@ -21,8 +26,19 @@ const FormDiploma = () => {
         }
     })
 
+    const router = useRouter()
+
     const onSubmit = (values: CreateDiplomaType) => {
-        console.log(values)
+        
+        mutate(values , {
+            onSuccess() {
+                toast.success("done create diploma")
+                router.push("/")
+            },
+            onError(error) {
+                toast.error(error.message || "something error")
+            },
+        })
     }
 
     return (
@@ -36,9 +52,15 @@ const FormDiploma = () => {
                         Cancel
                     </Link>
 
-                    <Button type='submit' className='bg-emerald-500 text-white text-sm font-mono'>
+                    <Button disabled={isPending} type='submit' className='bg-emerald-500 text-white text-sm font-mono'>
+                        {isPending ?<>
+                        <Loader2 className='size-4 animate-spin' />
                         <SaveIcon />
                         Save
+                        </> :  <>
+                        <SaveIcon />
+                        Save
+                        </>}
                     </Button>
 
                 </div>
@@ -49,7 +71,7 @@ const FormDiploma = () => {
                         <div className="bg-blue-600 text-white font-mono p-2.5">
                             <p>Diploma Information</p>
                         </div>
-                        <div className="p-4">
+                        <div className="p-4 space-y-3">
                             <UploadImageField />
 
                             <Controller
@@ -83,9 +105,9 @@ const FormDiploma = () => {
                                         <FieldLabel className="font-mono">
                                             Description
                                         </FieldLabel>
-                                        <Input
+                                        <Textarea
                                             className="rounded-sm px-4 py-6 border border-[#E5E7EB] font-mono"
-                                            type="text"
+                                            
                                             placeholder="Description"
                                             {...field}
                                         />

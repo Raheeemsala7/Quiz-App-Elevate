@@ -5,6 +5,8 @@ import { getToken } from "next-auth/jwt";
 import { RESPONSES } from "@/src/shared/constant/api.responses";
 import { IDiploma } from "../types/diploma";
 import { getNextAuthToken } from "../../auth/util/auth.util";
+import { UploadImageType } from "@/src/shared/lib/schema/image.schema";
+import { CreateDiplomaType } from "../schema/diploma.schema";
 
 
 
@@ -108,9 +110,9 @@ export const getDiplomasMinimalApi = async (req: NextRequest) => {
     );
 
 
-    const data : IApiResponse<IPagination<IDiploma>> = await res.json();
+    const data: IApiResponse<IPagination<IDiploma>> = await res.json();
 
-        if (!data.status) {
+    if (!data.status) {
         throw new Error(data.message || "Something went wrong");
     }
 
@@ -124,6 +126,34 @@ export const getDiplomasMinimalApi = async (req: NextRequest) => {
 };
 
 
-export const postCreateDiploma = async (req:NextRequest) => {
-    
+export const postCreateDiploma = async ({ req, body }: { req: NextRequest; body: CreateDiplomaType; }) => {
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized;
+
+
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/diplomas`,
+        {
+            method: "POST",
+            headers: {
+                ...HEADERS.authorize(token.token),
+                ...HEADERS.JsonBody
+            },
+            body: JSON.stringify(body)
+        }
+    );
+
+
+    console.log("Res Server " , res)
+    const data: IApiResponse<IDiploma> = await res.json();
+
+    console.log("Data Server " , data)
+
+    if (!data.status) {
+        throw new Error(data.message || "Something went wrong");
+    }
+
+
+    return data
 }
