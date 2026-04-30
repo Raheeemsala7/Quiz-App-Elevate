@@ -122,3 +122,8 @@ export const getDiplomasMinimalApi = async (req: NextRequest) => {
         })),
     };
 };
+
+
+export const postCreateDiploma = async (req:NextRequest) => {
+    
+}

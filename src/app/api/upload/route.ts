@@ -1,25 +1,25 @@
+import { uploadImageAPi } from "@/src/shared/apis/upload.imgae.api";
+import { uploadImageSchema } from "@/src/shared/lib/schema/image.schema";
+import { IErrorResponse } from "@/src/shared/lib/types/api";
 import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
-import { HEADERS } from "@/src/shared/constant/api.constant";
 
 export async function POST(req: NextRequest) {
-    const token = await getToken({ req });
 
-    if (!token) {
-        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    const formData = await req.formData()
+
+    const result = uploadImageSchema.safeParse({image : formData.get("image")})
+
+    if (!result.success) {
+        return NextResponse.json({
+            code:400,
+            status : false,
+            message: result.error.message
+        } satisfies IErrorResponse, { status: 400 })
     }
 
-    const formData = await req.formData();
+    const payload = await uploadImageAPi(req , formData)
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload`, {
-        method: "POST",
-        headers: {
-            ...HEADERS.authorize(token.token),
-        },
-        body: formData,
-    });
 
-    const data = await res.json();
+    return NextResponse.json(payload)
 
-    return NextResponse.json(data, { status: res.status });
 }
