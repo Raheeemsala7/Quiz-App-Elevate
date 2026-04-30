@@ -1,4 +1,4 @@
-import { getDiplomasApi, postCreateDiploma } from "@/src/features/diploma/apis/diploma.api";
+import { getDiplomasApi, postCreateDiploma, putUpdateDiploma } from "@/src/features/diploma/apis/diploma.api";
 import { NextRequest, NextResponse } from "next/server";
 
 

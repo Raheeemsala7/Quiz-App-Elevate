@@ -9,18 +9,24 @@ import { Button, buttonVariants } from '@/src/shared/components/ui/button'
 import Link from 'next/link'
 import { Loader2, SaveIcon, X } from 'lucide-react'
 import UploadImageField from '@/src/shared/components/upload-image-field'
-import { useCreateDiploma } from '../hooks/hooks'
+import { useCreateDiploma, useUpdateDiploma } from '../hooks/hooks'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { Textarea } from '@/src/shared/components/ui/textarea'
 
 interface IProps {
     initialData?: CreateDiplomaType
+    isEdit?: Boolean;
+    id: string
 }
 
-const FormDiploma = ({ initialData }: IProps) => {
+const FormDiploma = ({ initialData, isEdit, id }: IProps) => {
 
-    const { mutate, isPending } = useCreateDiploma()
+    const { mutate, isPending: isPendingCreate } = useCreateDiploma()
+    const { mutate: mutateUpdated, isPending: isPendingUpdate } = useUpdateDiploma()
+
+    const isPending = isEdit ? isPendingUpdate : isPendingCreate
+
     const form = useForm<CreateDiplomaType>({
         resolver: zodResolver(createDiplomaSchema),
         defaultValues: {
@@ -34,15 +40,28 @@ const FormDiploma = ({ initialData }: IProps) => {
 
     const onSubmit = (values: CreateDiplomaType) => {
 
-        mutate(values, {
-            onSuccess() {
-                toast.success("done create diploma")
-                router.push("/")
-            },
-            onError(error) {
-                toast.error(error.message || "something error")
-            },
-        })
+        if (isEdit) {
+            mutateUpdated({ values, id }, {
+                onSuccess() {
+                    toast.success("done update diploma")
+                    router.push("/")
+                },
+                onError(error) {
+                    toast.error(error.message || "something error")
+                },
+            })
+
+        } else {
+            mutate(values, {
+                onSuccess() {
+                    toast.success("done create diploma")
+                    router.push("/")
+                },
+                onError(error) {
+                    toast.error(error.message || "something error")
+                },
+            })
+        }
     }
 
     return (

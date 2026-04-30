@@ -20,9 +20,8 @@ const page = async ({ params }: IProps) => {
     return notFound()
   }
 
-  console.log(diploma)
 
-  return <FormDiploma initialData={diploma.payload.diploma} />
+  return <FormDiploma initialData={diploma.payload.diploma} isEdit={true} id={id} />
 }
 
 export default page

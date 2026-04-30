@@ -135,3 +135,33 @@ export const useCreateDiploma = () => {
         }
     })
 }
+
+export const useUpdateDiploma = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async ({ values, id }: { values: CreateDiplomaType, id: string }) => {
+            const res = await fetch(`/api/diploma/${id}`, {
+                method: "PUT",
+                body: JSON.stringify(values),
+                headers: {
+                    ...HEADERS.JsonBody
+                }
+            })
+
+            const data: IApiResponse<IDiploma> = await res.json()
+
+            if (!data.status) {
+                throw new Error(data.message || "Something wrong")
+            }
+            return data
+        },
+        onSuccess(data) {
+            console.log(data)
+            queryClient.invalidateQueries({ queryKey: ["diplomas-admin"] })
+
+        },
+        onError(error) {
+            console.log(error)
+        }
+    })
+}

@@ -148,10 +148,38 @@ export const postCreateDiploma = async ({ req, body }: { req: NextRequest; body:
     );
 
 
-    console.log("Res Server ", res)
     const data: IApiResponse<IDiploma> = await res.json();
 
-    console.log("Data Server ", data)
+    if (!data.status) {
+        throw new Error(data.message || "Something went wrong");
+    }
+
+
+    return data
+}
+
+export const putUpdateDiploma = async ({ req, body , id}: { req: NextRequest; body: CreateDiplomaType; id :string }) => {
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized;
+
+
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/diplomas/${id}`,
+        {
+            method: "PUT",
+            headers: {
+                ...HEADERS.authorize(token.token),
+                ...HEADERS.JsonBody
+            },
+            body: JSON.stringify(body)
+        }
+    );
+
+    console.log(res)
+
+
+    const data: IApiResponse<IDiploma> = await res.json();
 
     if (!data.status) {
         throw new Error(data.message || "Something went wrong");
