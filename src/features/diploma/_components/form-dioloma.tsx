@@ -14,23 +14,27 @@ import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { Textarea } from '@/src/shared/components/ui/textarea'
 
-const FormDiploma = () => {
+interface IProps {
+    initialData?: CreateDiplomaType
+}
+
+const FormDiploma = ({ initialData }: IProps) => {
 
     const { mutate, isPending } = useCreateDiploma()
     const form = useForm<CreateDiplomaType>({
         resolver: zodResolver(createDiplomaSchema),
         defaultValues: {
-            title: "",
-            description: "",
-            image: "",
+            title: initialData?.title ?? "",
+            description: initialData?.description ?? "",
+            image: initialData?.image ?? "",
         }
     })
 
     const router = useRouter()
 
     const onSubmit = (values: CreateDiplomaType) => {
-        
-        mutate(values , {
+
+        mutate(values, {
             onSuccess() {
                 toast.success("done create diploma")
                 router.push("/")
@@ -53,13 +57,13 @@ const FormDiploma = () => {
                     </Link>
 
                     <Button disabled={isPending} type='submit' className='bg-emerald-500 text-white text-sm font-mono'>
-                        {isPending ?<>
-                        <Loader2 className='size-4 animate-spin' />
-                        <SaveIcon />
-                        Save
-                        </> :  <>
-                        <SaveIcon />
-                        Save
+                        {isPending ? <>
+                            <Loader2 className='size-4 animate-spin' />
+                            <SaveIcon />
+                            Save
+                        </> : <>
+                            <SaveIcon />
+                            Save
                         </>}
                     </Button>
 
@@ -72,7 +76,7 @@ const FormDiploma = () => {
                             <p>Diploma Information</p>
                         </div>
                         <div className="p-4 space-y-3">
-                            <UploadImageField />
+                            <UploadImageField url={initialData?.image || undefined} isEdit={true} />
 
                             <Controller
                                 name="title"
@@ -107,7 +111,7 @@ const FormDiploma = () => {
                                         </FieldLabel>
                                         <Textarea
                                             className="rounded-sm px-4 py-6 border border-[#E5E7EB] font-mono"
-                                            
+
                                             placeholder="Description"
                                             {...field}
                                         />

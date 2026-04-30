@@ -86,9 +86,12 @@ export const getDiplomaApi = async (id: string) => {
         }
     })
 
+
+
     const data: IApiResponse<{ diploma: IDiploma }> = await res.json();
-    if (!data.status) {
-        throw new Error(data.message || "Something went wrong");
+    if (!res.ok || !data.status) {
+
+        return data
     }
     return data as IApiResponse<{ diploma: IDiploma }>;
 
@@ -145,10 +148,10 @@ export const postCreateDiploma = async ({ req, body }: { req: NextRequest; body:
     );
 
 
-    console.log("Res Server " , res)
+    console.log("Res Server ", res)
     const data: IApiResponse<IDiploma> = await res.json();
 
-    console.log("Data Server " , data)
+    console.log("Data Server ", data)
 
     if (!data.status) {
         throw new Error(data.message || "Something went wrong");

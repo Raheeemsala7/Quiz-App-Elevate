@@ -10,7 +10,12 @@ import { toast } from 'sonner'
 import { CreateDiplomaType } from '@/src/features/diploma/schema/diploma.schema'
 import { CloudUpload, CloudUploadIcon, Download, FileImage, Trash, Trash2 } from 'lucide-react'
 
-const UploadImageField = () => {
+interface IProps {
+    url?: string;
+    isEdit?: boolean
+}
+
+const UploadImageField = ({ isEdit, url }: IProps) => {
 
     const { isPending, mutate, uploadProgress } = useUploadImage()
     const inputRef = useRef<HTMLInputElement | null>(null)
@@ -33,13 +38,23 @@ const UploadImageField = () => {
 
 
     useEffect(() => {
+        if (isEdit && url) {
+            setPreview(url)
+            setUploadedImage({
+                name: "uploaded-image",
+                size: 0
+            })
+        }
+    }, [])
+
+
+    useEffect(() => {
         const unsubscribe = form.subscribe({
             formState: {
                 values: true,
-                errors: true,
                 isValid: true
             },
-            callback: ({ values, errors, isValid }) => {
+            callback: ({ values, isValid }) => {
 
                 if (isValid) {
                     mutate.mutate(values, {
@@ -69,6 +84,7 @@ const UploadImageField = () => {
 
         return () => unsubscribe()
     })
+
 
     return (
         <Controller
@@ -127,7 +143,7 @@ const UploadImageField = () => {
                                 </div>
                             </div>
                         ) : (
-                            <div className="h-22 p-6 border border-gray-200 flex justify-center items-center relative" onClick={() =>  inputRef.current?.click()}>
+                            <div className="h-22 p-6 border border-gray-200 flex justify-center items-center relative" onClick={() => inputRef.current?.click()}>
                                 <span className='absolute left-6 top-6'>
                                     <FileImage className='size-10 text-gray-200' />
                                 </span>
