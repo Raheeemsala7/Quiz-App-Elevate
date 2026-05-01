@@ -1,3 +1,4 @@
+import ModelDeleteDiploma from '@/src/features/diploma/_components/modal-delete-diploma';
 import { getDiplomaApi } from '@/src/features/diploma/apis/diploma.api';
 import { Button, buttonVariants } from '@/src/shared/components/ui/button';
 import { cn } from '@/src/shared/lib/utils';
@@ -40,10 +41,7 @@ const page = async ({ params }: IProps) => {
             <PenLine />
             Edit
           </Link>
-          <Button className='font-mono p-4 gap-2.5' variant={"destructive"}>
-            <Trash2 />
-            Delete
-          </Button>
+          <ModelDeleteDiploma id={id} />
         </div>
       </div>
 

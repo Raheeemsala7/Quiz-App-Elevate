@@ -17,7 +17,7 @@ import { Textarea } from '@/src/shared/components/ui/textarea'
 interface IProps {
     initialData?: CreateDiplomaType
     isEdit?: Boolean;
-    id: string
+    id?: string
 }
 
 const FormDiploma = ({ initialData, isEdit, id }: IProps) => {
@@ -41,7 +41,7 @@ const FormDiploma = ({ initialData, isEdit, id }: IProps) => {
     const onSubmit = (values: CreateDiplomaType) => {
 
         if (isEdit) {
-            mutateUpdated({ values, id }, {
+            mutateUpdated({ values, id : id ?? "" }, {
                 onSuccess() {
                     toast.success("done update diploma")
                     router.push("/")

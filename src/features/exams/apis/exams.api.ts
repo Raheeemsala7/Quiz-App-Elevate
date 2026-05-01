@@ -78,7 +78,7 @@ export const getExamById = async (examId: string) => {
     const token = await getNextAuthToken()
 
     if (!token) throw new Error("No token provided.")
-    
+
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/exams/${examId}`, {
         method: "GET",
@@ -92,12 +92,12 @@ export const getExamById = async (examId: string) => {
 
     const data: IApiResponse<IExamInfo> = await res.json()
 
-    if (!data.status) {
-        throw new Error(data.message || "Something went wrong");
+    if (!data.status || !res.ok) {
+        return data as IErrorResponse
     }
 
 
-    return data.payload  
+    return data as IApiResponse<IExamInfo>
 }
 
 

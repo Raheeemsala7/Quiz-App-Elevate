@@ -34,7 +34,7 @@ const page = async ({ params, searchParams }: IProps) => {
 
   console.log(data)
 
-  if (!data || !data.exam) {
+  if (!data.status) {
   return (
     <div className="p-6">
       <h2>Exam not found</h2>
@@ -42,7 +42,7 @@ const page = async ({ params, searchParams }: IProps) => {
   )
 }
 
-  const exam = data.exam
+  const exam = data.payload.exam
 
 
 

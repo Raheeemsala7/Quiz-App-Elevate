@@ -188,3 +188,31 @@ export const putUpdateDiploma = async ({ req, body , id}: { req: NextRequest; bo
 
     return data
 }
+export const deleteDiplomaApi = async ({ req , id}: { req: NextRequest; id :string }) => {
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized;
+
+
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/diplomas/${id}`,
+        {
+            method: "DELETE",
+            headers: {
+                ...HEADERS.authorize(token.token),
+                ...HEADERS.JsonBody
+            },
+        }
+    );
+
+
+
+    const data: IApiResponse<IDiploma> = await res.json();
+
+    if (!data.status) {
+        throw new Error(data.message || "Something went wrong");
+    }
+
+
+    return data
+}

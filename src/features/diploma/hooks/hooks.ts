@@ -165,3 +165,30 @@ export const useUpdateDiploma = () => {
         }
     })
 }
+export const useDeleteDiploma = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async (id: string) => {
+            const res = await fetch(`/api/diploma/${id}`, {
+                method: "DELETE",
+                headers: {
+                    ...HEADERS.JsonBody
+                }
+            })
+
+            const data: IApiResponse<{ message: string }> = await res.json()
+
+            if (!data.status) {
+                throw new Error(data.message || "Something wrong")
+            }
+            return data
+        },
+        onSuccess(data) {
+            console.log(data)
+            queryClient.invalidateQueries({ queryKey: ["diplomas-admin"] })
+        },
+        onError(error) {
+            console.log(error)
+        }
+    })
+}
