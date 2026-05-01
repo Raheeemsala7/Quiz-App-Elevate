@@ -16,12 +16,20 @@ const page = async ({ params }: IProps) => {
   const { examId, examTitle } = await params
 
   const examInfo = await getExamById(examId)
+  if (!examInfo.status) {
+    return (
+      <div className="p-6">
+        <h2>Exam not found</h2>
+      </div>
+    )
+  }
+
   const questionsPayload = await getQuestionsApi(examId)
 
 
 
   return (
-    <QuizComponent examInfo={examInfo} questions={questionsPayload.questions} />
+    <QuizComponent examInfo={examInfo.payload} questions={questionsPayload.questions} />
   )
 }
 
