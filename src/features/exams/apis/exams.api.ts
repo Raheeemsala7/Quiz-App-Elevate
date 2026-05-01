@@ -5,6 +5,8 @@ import { getToken } from "next-auth/jwt"
 import { RESPONSES } from "@/src/shared/constant/api.responses"
 import { DEFAULT_LIMIT_DIPLOMA, DEFAULT_LIMIT_DIPLOMA_ADMIN, HEADERS } from "@/src/shared/constant/api.constant"
 import { getNextAuthToken } from "../../auth/util/auth.util"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/src/auth"
 
 
 export const getExamsApi = async (req: NextRequest) => {
@@ -76,15 +78,16 @@ export const getExamsApi = async (req: NextRequest) => {
 
 export const getExamById = async (examId: string): Promise<IApiResponse<IExamInfo>> => {
     const token = await getNextAuthToken()
-
-    console.log("TOKEN : " + token?.token)
-    if (!token) return RESPONSES.unauthorized
+const session = await getServerSession(authOptions)
+    
+    console.log("TOKEN : " + session?.token)
+    if (!session) return RESPONSES.unauthorized
 
 
     const res = await fetch(`${process.env.API_URL}/exams/${examId}`, {
         method: "GET",
         headers: {
-            ...HEADERS.authorize(token.token)
+            ...HEADERS.authorize(session?.token)
         }
     })
 
