@@ -77,6 +77,7 @@ export const getExamsApi = async (req: NextRequest) => {
 export const getExamById = async (examId: string): Promise<IApiResponse<IExamInfo>> => {
     const token = await getNextAuthToken()
 
+    console.log("TOKEN : " + token?.token)
     if (!token) return RESPONSES.unauthorized
 
 
@@ -87,11 +88,13 @@ export const getExamById = async (examId: string): Promise<IApiResponse<IExamInf
         }
     })
 
-    console.log("STATUS:", res.status)
+    console.log("STATUS:", res)
 
 
     const data: IApiResponse<IExamInfo> = await res.json()
 
+
+    console.log("DATA : " + data)
 
 
 

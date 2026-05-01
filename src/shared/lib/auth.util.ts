@@ -1,23 +1,9 @@
 "use server"
 
-import { decode } from "next-auth/jwt"
-import { cookies } from "next/headers"
-
+import { authOptions } from "@/src/auth"
+import { getServerSession } from "next-auth"
 
 export async function getNextAuthToken() {
-  const cookiesStore = await cookies()
-  const token = cookiesStore.get(process.env.NEXT_AUTH_SESSION_COOKIE_NAME!)?.value
-
-
-
-  try {
-    const jwt = decode({
-      token,
-      secret: process.env.NEXTAUTH_SECRET!,
-    })
-    return jwt
-  } catch (error) {
-    void error;
-    return null;
-  }
+  const session = await getServerSession(authOptions)
+  return session?.token ?? null
 }

@@ -25,7 +25,7 @@ export const authOptions: NextAuthOptions = {
                 })
 
                 const data: IApiResponse<IAuthResponse> = await res.json()
-                console.log("data login" , data)
+                console.log("data login", data)
                 if (!data.status) {
                     throw Error(data.message)
                 }
@@ -54,6 +54,7 @@ export const authOptions: NextAuthOptions = {
         },
         session: async ({ session, token }) => {
             session.user = token.user
+            session.token = token.token
 
             return session
         }
