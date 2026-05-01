@@ -16,7 +16,7 @@ const page = async ({ params }: IProps) => {
   const { examId, examTitle } = await params
 
   const examInfo = await getExamById(examId)
-  if (!examInfo.status) {
+  if (!examInfo || !examInfo.status){
     return (
       <div className="p-6">
         <h2>Exam not found</h2>
@@ -25,6 +25,7 @@ const page = async ({ params }: IProps) => {
   }
 
   const questionsPayload = await getQuestionsApi(examId)
+
 
 
 

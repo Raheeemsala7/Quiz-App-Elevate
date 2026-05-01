@@ -14,7 +14,7 @@ export const uploadImageAPi = async (req : NextRequest , formData: FormData,) =>
 
     if (!token) return  RESPONSES.unauthorized as IErrorResponse
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload` , {
+    const res = await fetch(`${process.env.API_URL}/upload` , {
         method  :"POST",
         headers : {
             ...HEADERS.authorize(token.token)

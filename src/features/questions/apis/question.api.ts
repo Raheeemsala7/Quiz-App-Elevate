@@ -36,7 +36,7 @@ export const getQuestionsApi = async (
     }
 
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/questions/exam/${examId}?${query.toString()}`,
+        `${process.env.API_URL}/questions/exam/${examId}?${query.toString()}`,
         {
             headers: {
                 ...HEADERS.authorize(token.token),
@@ -61,7 +61,7 @@ export const getQuestionApi = async (questionId: string)  => {
 
     if (!token) throw new Error("No token provided.")
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions/${questionId}`, {
+    const res = await fetch(`${process.env.API_URL}/questions/${questionId}`, {
         headers: {
             ...HEADERS.authorize(token.token)
         }
@@ -82,7 +82,7 @@ export const postSubmissions = async ({ req, body }: { req: NextRequest; body: I
 
     if (!token) return RESPONSES.unauthorized as IErrorResponse
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/submissions`, {
+    const res = await fetch(`${process.env.API_URL}/submissions`, {
         method: "POST",
         body: JSON.stringify(body),
         headers: {

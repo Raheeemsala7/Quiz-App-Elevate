@@ -34,7 +34,7 @@ const page = async ({ params, searchParams }: IProps) => {
 
   console.log(data)
 
-  if (!data.status) {
+  if (!data || !data.status){
   return (
     <div className="p-6">
       <h2>Exam not found</h2>

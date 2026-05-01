@@ -55,7 +55,7 @@ export const getExamsApi = async (req: NextRequest) => {
     if (diplomaId) query.append("diplomaId", diplomaId);
 
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/exams?${query.toString()}`,
+        `${process.env.API_URL}/exams?${query.toString()}`,
         {
             method: "GET",
             headers: {
@@ -74,23 +74,26 @@ export const getExamsApi = async (req: NextRequest) => {
 };
 
 
-export const getExamById = async (examId: string) => {
+export const getExamById = async (examId: string): Promise<IApiResponse<IExamInfo>> => {
     const token = await getNextAuthToken()
 
-    if (!token) throw new Error("No token provided.")
+    if (!token) return RESPONSES.unauthorized
 
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/exams/${examId}`, {
+    const res = await fetch(`${process.env.API_URL}/exams/${examId}`, {
         method: "GET",
         headers: {
             ...HEADERS.authorize(token.token)
         }
     })
 
-    console.log(process.env.NEXT_PUBLIC_API_URL)
+    console.log("STATUS:", res.status)
 
 
     const data: IApiResponse<IExamInfo> = await res.json()
+
+
+
 
     if (!data.status || !res.ok) {
         return data as IErrorResponse

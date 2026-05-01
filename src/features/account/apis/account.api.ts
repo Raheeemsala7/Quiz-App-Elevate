@@ -14,7 +14,7 @@ export const getProfile = async (req: NextRequest) => {
 
     if (!token) return RESPONSES.unauthorized as IErrorResponse
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile`, {
+    const res = await fetch(`${process.env.API_URL}/users/profile`, {
         headers: {
             ...HEADERS.JsonBody,
             ...HEADERS.authorize(token.token)
@@ -37,7 +37,7 @@ export const updateProfile = async ({ req, body }: { req: NextRequest; body: IPa
 
     if (!token) return RESPONSES.unauthorized as IErrorResponse
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/profile`, {
+    const res = await fetch(`${process.env.API_URL}/users/profile`, {
         method: "PATCH",
         headers: {
             ...HEADERS.JsonBody,
@@ -65,7 +65,7 @@ export const removeAccount = async (req: NextRequest) => {
     if (!token) return RESPONSES.unauthorized as IErrorResponse
 
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/account`, {
+    const res = await fetch(`${process.env.API_URL}/users/account`, {
         method: "DELETE",
         headers: {
             ...HEADERS.authorize(token.token)
@@ -87,7 +87,7 @@ export const changeEmailRequest = async ({ req, body }: { req: NextRequest; body
 
     if (!token) return RESPONSES.unauthorized as IErrorResponse
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/email/request`, {
+    const res = await fetch(`${process.env.API_URL}/users/email/request`, {
         method: "POST",
         headers: {
             ...HEADERS.JsonBody,
@@ -111,7 +111,7 @@ export const confirmEmail = async ({ req, body }: { req: NextRequest; body: IPay
 
     if (!token) return RESPONSES.unauthorized as IErrorResponse
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/email/confirm`, {
+    const res = await fetch(`${process.env.API_URL}/users/email/confirm`, {
         method: "POST",
         headers: {
             ...HEADERS.JsonBody,
@@ -134,7 +134,7 @@ export const resetPassword = async ({ req, body }: { req: NextRequest; body: IPa
 
     if (!token) return RESPONSES.unauthorized as IErrorResponse
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/change-password`, {
+    const res = await fetch(`${process.env.API_URL}/users/change-password`, {
         method: "POST",
         headers: {
             ...HEADERS.JsonBody,

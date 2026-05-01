@@ -5,7 +5,7 @@ import { IRegisterType } from "@/src/shared/lib/interface";
 
 export const sendEmailVerificationApi = async (email: string) => {
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/send-email-verification`, {
+    const res = await fetch(`${process.env.API_URL}/auth/send-email-verification`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -23,7 +23,7 @@ export const sendEmailVerificationApi = async (email: string) => {
 
 export const verifyCodeEmailApi = async ({email, code}: {email: string, code: string}) => {
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/confirm-email-verification`, {
+    const res = await fetch(`${process.env.API_URL}/auth/confirm-email-verification`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -41,8 +41,8 @@ export const verifyCodeEmailApi = async ({email, code}: {email: string, code: st
 
 
 export const registerApi = async (data: IRegisterType) => {
-    console.log(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`)
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+    console.log(`${process.env.API_URL}/auth/register`)
+    const res = await fetch(`${process.env.API_URL}/auth/register`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

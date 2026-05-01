@@ -57,7 +57,7 @@ export const getDiplomasApi = async (req: NextRequest): Promise<IApiResponse<IPa
         query.append("search", search);
     }
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diplomas?${query.toString()}`, {
+    const res = await fetch(`${process.env.API_URL}/diplomas?${query.toString()}`, {
         method: "GET",
         headers: {
             ...HEADERS.authorize(token.token)
@@ -80,7 +80,7 @@ export const getDiplomaApi = async (id: string) => {
     if (!token) return RESPONSES.unauthorized as IErrorResponse
 
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/diplomas/${id}`, {
+    const res = await fetch(`${process.env.API_URL}/diplomas/${id}`, {
         headers: {
             ...HEADERS.authorize(token.token)
         }
@@ -104,7 +104,7 @@ export const getDiplomasMinimalApi = async (req: NextRequest) => {
     if (!token) return RESPONSES.unauthorized;
 
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/diplomas?page=1&limit=100`,
+        `${process.env.API_URL}/diplomas?page=1&limit=100`,
         {
             headers: {
                 ...HEADERS.authorize(token.token),
@@ -136,7 +136,7 @@ export const postCreateDiploma = async ({ req, body }: { req: NextRequest; body:
 
 
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/diplomas`,
+        `${process.env.API_URL}/diplomas`,
         {
             method: "POST",
             headers: {
@@ -165,7 +165,7 @@ export const putUpdateDiploma = async ({ req, body , id}: { req: NextRequest; bo
 
 
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/diplomas/${id}`,
+        `${process.env.API_URL}/diplomas/${id}`,
         {
             method: "PUT",
             headers: {
@@ -195,7 +195,7 @@ export const deleteDiplomaApi = async ({ req , id}: { req: NextRequest; id :stri
 
 
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/diplomas/${id}`,
+        `${process.env.API_URL}/diplomas/${id}`,
         {
             method: "DELETE",
             headers: {
