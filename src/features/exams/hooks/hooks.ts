@@ -1,11 +1,13 @@
 "use client"
 
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { EXAMS_KEYS, EXAMS_KEYS_ADMIN } from "../apis/exams.options"
 import { useSearchParams } from "next/navigation"
-import { DEFAULT_LIMIT_DIPLOMA } from "@/src/shared/constant/api.constant"
+import { DEFAULT_LIMIT_DIPLOMA, HEADERS } from "@/src/shared/constant/api.constant"
 import { IApiResponse, IPagination } from "@/src/shared/lib/types/api"
-import { IExam } from "../types/exam"
+import { IExam, IExamInfo } from "../types/exam"
+import { IDiploma } from "../../diploma/types/diploma"
+import { CreateExamType } from "../schema/exam.diploma"
 
 
 
@@ -77,3 +79,92 @@ export const useExamsAdmin = () => {
 
     });
 };
+
+
+
+export const useCreateExam = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async (values: CreateExamType) => {
+            const res = await fetch('/api/exams', {
+                method: "POST",
+                body: JSON.stringify(values),
+                headers: {
+                    ...HEADERS.JsonBody
+                }
+            })
+
+            const data: IApiResponse<IExamInfo> = await res.json()
+
+            if (!data.status) {
+                throw new Error(data.message || "Something wrong")
+            }
+            return data 
+        },
+        onSuccess(data) {
+            console.log(data)
+            queryClient.invalidateQueries({ queryKey: ["admin-exams"] })
+
+        },
+        onError(error) {
+            console.log(error)
+        }
+    })
+}
+
+export const useUpdateExam = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async ({ values, id }: { values: CreateExamType, id: string }) => {
+            const res = await fetch(`/api/exams/${id}`, {
+                method: "PUT",
+                body: JSON.stringify(values),
+                headers: {
+                    ...HEADERS.JsonBody
+                }
+            })
+
+            const data: IApiResponse<IExamInfo> = await res.json()
+
+            if (!data.status) {
+                throw new Error(data.message || "Something wrong")
+            }
+            return data
+        },
+        onSuccess(data) {
+            console.log(data)
+            queryClient.invalidateQueries({ queryKey: ["admin-exams"] })
+
+        },
+        onError(error) {
+            console.log(error)
+        }
+    })
+}
+export const useDeleteExam = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async (id: string) => {
+            const res = await fetch(`/api/exams/${id}`, {
+                method: "DELETE",
+                headers: {
+                    ...HEADERS.JsonBody
+                }
+            })
+
+            const data: IApiResponse<{ message: string }> = await res.json()
+
+            if (!data.status) {
+                throw new Error(data.message || "Something wrong")
+            }
+            return data
+        },
+        onSuccess(data) {
+            console.log(data)
+            queryClient.invalidateQueries({ queryKey: ["admin-exams"] })
+        },
+        onError(error) {
+            console.log(error)
+        }
+    })
+}

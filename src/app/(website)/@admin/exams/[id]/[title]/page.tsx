@@ -1,3 +1,4 @@
+import ModelDeleteExam from '@/src/features/exams/_components/ModalDeleteExam';
 import { getExamById } from '@/src/features/exams/apis/exams.api';
 import { IExamInfo } from '@/src/features/exams/types/exam';
 import MenubarSortQuestion from '@/src/features/questions/_components/menubar-sort-questions';
@@ -55,14 +56,11 @@ const page = async ({ params, searchParams }: IProps) => {
             <Ban />
             Immutable
           </Button>
-          <Link className={cn(buttonVariants(), "font-mono p-4 gap-2.5 bg-blue-600")} href={`/${exam.id}/${slugify(exam.title, { lower: false })}/edit`}>
+          <Link className={cn(buttonVariants(), "font-mono p-4 gap-2.5 bg-blue-600")} href={`/exams/${exam.id}/${slugify(exam.title, { lower: false })}/edit`}>
             <PenLine />
             Edit
           </Link>
-          <Button className='font-mono p-4 gap-2.5' variant={"destructive"}>
-            <Trash2 />
-            Delete
-          </Button>
+          <ModelDeleteExam id={id} />
         </div>
       </div>
 

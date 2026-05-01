@@ -5,6 +5,7 @@ import { getToken } from "next-auth/jwt"
 import { RESPONSES } from "@/src/shared/constant/api.responses"
 import { DEFAULT_LIMIT_DIPLOMA, DEFAULT_LIMIT_DIPLOMA_ADMIN, HEADERS } from "@/src/shared/constant/api.constant"
 import { getNextAuthToken } from "@/src/shared/lib/auth.util"
+import { CreateExamType } from "../schema/exam.diploma"
 
 
 
@@ -108,3 +109,93 @@ export const getExamById = async (examId: string): Promise<IApiResponse<IExamInf
 
 
 
+
+
+export const postCreateExam = async ({ req, body }: { req: NextRequest; body: CreateExamType; }) => {
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized;
+
+
+    const res = await fetch(
+        `${process.env.API_URL}/exams`,
+        {
+            method: "POST",
+            headers: {
+                ...HEADERS.authorize(token.token),
+                ...HEADERS.JsonBody
+            },
+            body: JSON.stringify(body)
+        }
+    );
+
+    const data: IApiResponse<IExamInfo> = await res.json();
+
+    if (!data.status) {
+        throw new Error(data.message || "Something went wrong");
+    }
+
+    return data
+}
+
+export const putUpdateExam = async ({ req, body , id}: { req: NextRequest; body: CreateExamType; id :string }) => {
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized;
+
+
+    const res = await fetch(
+        `${process.env.API_URL}/exams/${id}`,
+        {
+            method: "PUT",
+            headers: {
+                ...HEADERS.authorize(token.token),
+                ...HEADERS.JsonBody
+            },
+            body: JSON.stringify(body)
+        }
+    );
+
+    console.log(res)
+
+
+    const data: IApiResponse<IExamInfo> = await res.json();
+
+    if (!data.status) {
+        throw new Error(data.message || "Something went wrong");
+    }
+
+
+    return data
+}
+
+export const deleteExamApi = async ({ req , id}: { req: NextRequest; id :string }) => {
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized;
+
+
+    const res = await fetch(
+        `${process.env.API_URL}/exams/${id}`,
+        {
+            method: "DELETE",
+            headers: {
+                ...HEADERS.authorize(token.token),
+                ...HEADERS.JsonBody
+            },
+        }
+    );
+
+
+    console.log("RES DATA : " + res)
+
+    const data: IApiResponse<{message : string}> = await res.json();
+    console.log("DATA : " + data)
+
+    if (!data.status) {
+        throw new Error(data.message || "Something went wrong");
+    }
+
+
+    return data
+}
