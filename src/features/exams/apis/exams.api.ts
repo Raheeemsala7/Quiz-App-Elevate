@@ -78,14 +78,13 @@ export const getExamsApi = async (req: NextRequest) => {
 export const getExamById = async (examId: string): Promise<IApiResponse<IExamInfo>> => {
     const token = await getNextAuthToken()
     
-    console.log("TOKEN : " + token)
     if (!token) return RESPONSES.unauthorized
 
 
     const res = await fetch(`${process.env.API_URL}/exams/${examId}`, {
         method: "GET",
         headers: {
-            ...HEADERS.authorize(token)
+            ...HEADERS.authorize(token.token)
         }
     })
 
