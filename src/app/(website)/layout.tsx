@@ -125,11 +125,14 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
             <main className='w-full bg-[#F9FAFB] space-y-6 flex flex-col'>
                 <Breadcrumb />
 
-                <div className=' flex-col flex flex-1'>
-                    {isAdmin ? admin : user}
+                <div className=' flex-col flex flex-1 p-4'>
+
+                        {children}
+                        {!children && isAdmin ? admin : user}
+
+
                 </div>
 
-                {/* {children} */}
             </main>
         </div>
     )
