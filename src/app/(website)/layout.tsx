@@ -6,7 +6,7 @@ import SignOutButton from '@/src/shared/components/signOutButton'
 import { Avatar, AvatarFallback } from '@/src/shared/components/ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/src/shared/components/ui/dropdown-menu'
 import { cn } from '@/src/shared/lib/utils'
-import { Bolt, BookOpenCheck, EllipsisIcon, GraduationCap, UserRound } from 'lucide-react'
+import { Bolt, BookOpenCheck, EllipsisIcon, GraduationCap, LogsIcon, UserRound } from 'lucide-react'
 import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 import React from 'react'
@@ -46,12 +46,21 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
                             <span className='text-inherit group-hover:text-inherit font-mono text-base transition-colors'>Diploma</span>
                         </Link>
                         {isAdmin && (
-                        <Link href={"/exams"} className={cn("flex p-4 gap-2.5 group  transition-all",
-                            isAdmin ? "hover:bg-gray-700 border border-transparent hover:border-gray-400 text-white" : "hover:bg-blue-100 border border-transparent hover:border-blue-600 hover:text-blue-600"
-                        )}>
-                            <BookOpenCheck className='size-6 text-inherit group-hover:text-inherit transition-colors' />
-                            <span className='text-inherit group-hover:text-inherit font-mono text-base transition-colors'>Exams</span>
-                        </Link>
+                            <>
+                                <Link href={"/exams"} className={cn("flex p-4 gap-2.5 group  transition-all",
+                                    isAdmin ? "hover:bg-gray-700 border border-transparent hover:border-gray-400 text-white" : "hover:bg-blue-100 border border-transparent hover:border-blue-600 hover:text-blue-600"
+                                )}>
+                                    <BookOpenCheck className='size-6 text-inherit group-hover:text-inherit transition-colors' />
+                                    <span className='text-inherit group-hover:text-inherit font-mono text-base transition-colors'>Exams</span>
+                                </Link>
+                                <Link href={"/audit-log"} className={cn("flex p-4 gap-2.5 group  transition-all",
+                                    isAdmin ? "hover:bg-gray-700 border border-transparent hover:border-gray-400 text-white" : "hover:bg-blue-100 border border-transparent hover:border-blue-600 hover:text-blue-600"
+                                )}>
+                                    <LogsIcon className='size-6 text-inherit group-hover:text-inherit transition-colors' />
+                                    <span className='text-inherit group-hover:text-inherit font-mono text-base transition-colors'>Audit Log</span>
+                                </Link>
+                            </>
+
                         )}
                         <Link href={"/account"} className={cn("flex p-4 gap-2.5 group  transition-all",
                             isAdmin ? "hover:bg-gray-700 border border-transparent hover:border-gray-400 text-white" : "hover:bg-blue-100 border border-transparent hover:border-blue-600 hover:text-blue-600"
