@@ -128,7 +128,7 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
                 <div className=' flex-col flex flex-1 p-4'>
 
                         {children}
-                        {!children && isAdmin ? admin : user}
+                        { isAdmin ? admin : user}
 
 
                 </div>
