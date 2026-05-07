@@ -42,7 +42,7 @@ const page = async ({ params, searchParams }: IProps) => {
       <div className="mt-4 p-4">
         <div className='flex justify-between items-center bg-blue-600 p-2.5'>
           <p className='text-white'>Exam Questions</p>
-          <Link href={`/exams/${id}/create-add-question`} className='text-white font-mono flex items-center gap-2 text-base'>
+          <Link href={`/exams/${id}/add-question/${exam.diplomaId}`} className='text-white font-mono flex items-center gap-2 text-base'>
             <Plus />
             Add Questions
           </Link>

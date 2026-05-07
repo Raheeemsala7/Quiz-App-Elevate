@@ -126,11 +126,8 @@ const layoutDashboard = async ({ children, admin, user }: IProps) => {
                 <Breadcrumb />
 
                 <div className=' flex-col flex flex-1 p-4'>
-
                         {children}
                         { isAdmin ? admin : user}
-
-
                 </div>
 
             </main>

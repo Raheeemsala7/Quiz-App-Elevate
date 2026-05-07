@@ -1,5 +1,5 @@
 import { IApiResponse, IErrorResponse } from "@/src/shared/lib/types/api"
-import { IPayloadSubmissions, IQuestion, IQuestionInfo, IResponseSubmissions } from "../types/questions"
+import { ExamQuestion, IPayloadSubmissions, IQuestion, IQuestionInfo, IResponseSubmissions } from "../types/questions"
 import { HEADERS } from "@/src/shared/constant/api.constant"
 import { getNextAuthToken } from "../../auth/util/auth.util"
 import { getToken } from "next-auth/jwt"
@@ -15,10 +15,11 @@ export const getQuestionsApi = async (
         sortBy?: "title" | "createdAt";
         sortOrder?: "asc" | "desc";
     }
-) => {
-    const token = await getNextAuthToken();
+): Promise<IQuestion> => {
 
-    if (!token) throw new Error("No token provided.") 
+    let token = await getNextAuthToken();
+    
+    if (!token)  throw new Error("Unauthorized");
 
 
     const query = new URLSearchParams();
@@ -51,11 +52,11 @@ export const getQuestionsApi = async (
         throw new Error(data.message || "Something went wrong");
     }
 
-    return data.payload  as IQuestion;
+    return data.payload as IQuestion;
 };
 
 
-export const getQuestionApi = async (questionId: string)  => {
+export const getSingleQuestionApi = async (questionId: string) => {
 
     const token = await getNextAuthToken();
 
@@ -75,6 +76,28 @@ export const getQuestionApi = async (questionId: string)  => {
     return data.payload as IQuestionInfo
 }
 
+
+export const postSingleQuestionAction = async ({ req, body, id }: { req: NextRequest; body: ExamQuestion; id: string }) => {
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized
+
+    const res = await fetch(`${process.env.API_URL}/questions/exam/${id}`, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+            ...HEADERS.authorize(token.token),
+            ...HEADERS.JsonBody
+        }
+    })
+
+    const data: IApiResponse<IQuestionInfo> = await res.json()
+
+    if (!data.status) {
+        return data as IErrorResponse
+    }
+    return data as IApiResponse<IQuestionInfo>
+}
 
 export const postSubmissions = async ({ req, body }: { req: NextRequest; body: IPayloadSubmissions; }) => {
 

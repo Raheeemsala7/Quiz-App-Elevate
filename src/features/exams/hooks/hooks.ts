@@ -47,8 +47,6 @@ export const useExamsInfinite = (diplomaId: string) => {
     })
 }
 
-
-
 export const useExamsAdmin = () => {
     const searchParams = useSearchParams();
 
@@ -79,8 +77,23 @@ export const useExamsAdmin = () => {
 
     });
 };
+export const useExamsSelect = ({  diplomaId }: {  diplomaId: string }) => {
+
+    return useQuery({
+        queryKey: ["exams-select", diplomaId],
+        enabled: !!diplomaId,
+        queryFn: async () => {
+            const params = new URLSearchParams();
+            if (diplomaId) params.set("diplomaId", diplomaId);
 
 
+            const res = await fetch(`/api/exams/minimal?${params.toString()}`);
+            const data: IApiResponse<IPagination<IExam>> = await res.json();
+
+            return data;
+        },
+    });
+};
 
 export const useCreateExam = () => {
     const queryClient = useQueryClient()
@@ -99,7 +112,7 @@ export const useCreateExam = () => {
             if (!data.status) {
                 throw new Error(data.message || "Something wrong")
             }
-            return data 
+            return data
         },
         onSuccess(data) {
             console.log(data)

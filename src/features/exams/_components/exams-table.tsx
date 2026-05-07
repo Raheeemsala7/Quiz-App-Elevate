@@ -149,12 +149,12 @@ const ExamsTable = ({ exams, isFetching, isLoading, isPending }: IProps) => {
                   </div>
                 </td>
                 <td className="px-4 py-3">
-                  <p className="text-sm font-medium text-gray-900 truncate">
+                  <p className="text-sm font-medium text-gray-900 truncate max-w-40">
                     {exam.title}
                   </p>
                 </td>
                 <td className="px-4 py-3">
-                  <p className="text-sm text-gray-600 line-clamp-2">
+                  <p className="text-sm text-gray-600 line-clamp-2  max-w-60">
                     {exam.description}
                   </p>
                 </td>

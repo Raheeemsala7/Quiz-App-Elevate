@@ -6,6 +6,7 @@ import { RESPONSES } from "@/src/shared/constant/api.responses"
 import { DEFAULT_LIMIT_DIPLOMA, DEFAULT_LIMIT_DIPLOMA_ADMIN, HEADERS } from "@/src/shared/constant/api.constant"
 import { getNextAuthToken } from "@/src/shared/lib/auth.util"
 import { CreateExamType } from "../schema/exam.diploma"
+import { useQuery } from "@tanstack/react-query"
 
 
 
@@ -78,7 +79,7 @@ export const getExamsApi = async (req: NextRequest) => {
 
 export const getExamById = async (examId: string): Promise<IApiResponse<IExamInfo>> => {
     const token = await getNextAuthToken()
-    
+
     if (!token) return RESPONSES.unauthorized
 
 
@@ -89,14 +90,8 @@ export const getExamById = async (examId: string): Promise<IApiResponse<IExamInf
         }
     })
 
-    console.log("STATUS:", res)
-
 
     const data: IApiResponse<IExamInfo> = await res.json()
-
-
-    console.log("DATA : " + data)
-
 
 
     if (!data.status || !res.ok) {
@@ -107,7 +102,42 @@ export const getExamById = async (examId: string): Promise<IApiResponse<IExamInf
     return data as IApiResponse<IExamInfo>
 }
 
+export const getExamsSelectApi = async (req: NextRequest) => {
+    const token = await getToken({ req });
 
+    if (!token) return RESPONSES.unauthorized;
+
+    const diplomaId = req.nextUrl.searchParams.get("diplomaId");
+
+    const page = req.nextUrl.searchParams.get("page") || "1";
+    const limit = req.nextUrl.searchParams.get("limit") || "100";
+    const search = req.nextUrl.searchParams.get("search") || "";
+
+    const params = new URLSearchParams({
+        page,
+        limit,
+        
+    });
+    if (diplomaId) params.append("diplomaId", diplomaId);
+    if (search) params.append("search", search);
+
+    const res = await fetch(
+        `${process.env.API_URL}/exams?${params.toString()}`,
+        {
+            headers: {
+                ...HEADERS.authorize(token.token),
+            },
+        }
+    );
+
+    const data: IApiResponse<IPagination<IExam>> = await res.json();
+
+    if (!res.ok || !data.status) {
+        return data as IErrorResponse;
+    }
+
+    return data;
+};
 
 
 
@@ -138,7 +168,7 @@ export const postCreateExam = async ({ req, body }: { req: NextRequest; body: Cr
     return data
 }
 
-export const putUpdateExam = async ({ req, body , id}: { req: NextRequest; body: CreateExamType; id :string }) => {
+export const putUpdateExam = async ({ req, body, id }: { req: NextRequest; body: CreateExamType; id: string }) => {
     const token = await getToken({ req });
 
     if (!token) return RESPONSES.unauthorized;
@@ -169,7 +199,7 @@ export const putUpdateExam = async ({ req, body , id}: { req: NextRequest; body:
     return data
 }
 
-export const deleteExamApi = async ({ req , id}: { req: NextRequest; id :string }) => {
+export const deleteExamApi = async ({ req, id }: { req: NextRequest; id: string }) => {
     const token = await getToken({ req });
 
     if (!token) return RESPONSES.unauthorized;
@@ -189,7 +219,7 @@ export const deleteExamApi = async ({ req , id}: { req: NextRequest; id :string 
 
     console.log("RES DATA : " + res)
 
-    const data: IApiResponse<{message : string}> = await res.json();
+    const data: IApiResponse<{ message: string }> = await res.json();
     console.log("DATA : " + data)
 
     if (!data.status) {

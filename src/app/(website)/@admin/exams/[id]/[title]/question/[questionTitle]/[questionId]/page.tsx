@@ -1,4 +1,4 @@
-import { getQuestionApi } from '@/src/features/questions/apis/question.api'
+import { getSingleQuestionApi } from '@/src/features/questions/apis/question.api'
 import { Button, buttonVariants } from '@/src/shared/components/ui/button'
 import { cn } from '@/src/shared/lib/utils'
 import { Ban, ExternalLink, PenLine, Trash2 } from 'lucide-react'
@@ -19,7 +19,7 @@ const page = async ({ params }: {
 
     console.log(id, title, questionId, questionTitle)
 
-    const questionInfo = await getQuestionApi(questionId)
+    const questionInfo = await getSingleQuestionApi(questionId)
 
 
 

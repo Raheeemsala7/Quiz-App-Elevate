@@ -22,15 +22,6 @@ const QuestionsList = async ({ id, title, searchParams }: IProps) => {
         sortOrder: searchParams?.sortOrder,
     })
 
-
-    console.log({
-        search: searchParams?.search,
-        sortBy: searchParams?.sortBy,
-        sortOrder: searchParams?.sortOrder,
-    })
-
-
-
     return (
         <div>
             {questions.questions.map((que) => (
@@ -46,7 +37,6 @@ const QuestionsList = async ({ id, title, searchParams }: IProps) => {
                             <MenubarContent>
                                 <MenubarGroup>
 
-                                    {/* ✅ View */}
                                     <MenubarItem asChild>
                                         <Link
                                             href={`/exams/${id}/${slugify(title, { lower: false })}/question/${slugify(que.text, { lower: false })}/${que.id}`}
@@ -57,7 +47,6 @@ const QuestionsList = async ({ id, title, searchParams }: IProps) => {
                                         </Link>
                                     </MenubarItem>
 
-                                    {/* Edit */}
                                     <MenubarItem asChild>
                                         <Link
                                             href={`/exams/${id}/${slugify(title, { lower: false })}/question/${que.id}/edit`}
@@ -68,7 +57,6 @@ const QuestionsList = async ({ id, title, searchParams }: IProps) => {
                                         </Link>
                                     </MenubarItem>
 
-                                    {/* Delete (هنظبطه تحت) */}
                                     <MenubarItem className="flex items-center gap-2">
                                         <Trash2 className="h-4 w-4 text-red-500" />
                                         Delete

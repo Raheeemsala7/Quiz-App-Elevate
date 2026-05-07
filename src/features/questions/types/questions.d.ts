@@ -13,6 +13,7 @@ export interface IQuestion extends Timestamp {
 interface IAnswer {
     id: string
     text: string
+    isCorrect?: boolean
 }
 
 
@@ -99,4 +100,17 @@ export interface IQuestionInfo {
         }
     }
 
+}
+
+
+
+export interface Answer {
+    id?: string
+    text: string
+    isCorrect: boolean
+}
+
+interface ExamQuestion {
+    text: string
+    answers: Answer[]
 }
