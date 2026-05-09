@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react'
-import { IQueItem, IQuestion, IQuestionAnalytics, ISubmission } from '../types/questions';
+import {  IQueItem, IQuestionAnalytics, ISubmission } from '../types/questions';
 import { IExamInfo } from '../../exams/types/exam';
 import { Progress } from '@/src/shared/components/ui/progress';
 import { TimerCircle } from './timer-component';

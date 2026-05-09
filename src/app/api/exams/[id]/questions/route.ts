@@ -1,4 +1,4 @@
-import { getMultiQuestionApi, getQuestionsApi, postSingleQuestionAction, putSingleQuestionAction } from "@/src/features/questions/apis/question.api";
+import { getMultiQuestionApi, postMultiBulkQuestionAction, } from "@/src/features/questions/apis/question.api";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
@@ -11,29 +11,23 @@ export async function POST(
     const { id } = await context.params
 
 
-    const payload = await postSingleQuestionAction({ req, body, id });
+    const payload = await postMultiBulkQuestionAction({ req, body, id });
 
     return NextResponse.json(payload, {
         status: payload.status ? 200 : 400
     });
 
 }
-export async function PUT(
+
+
+export async function GET(
     req: NextRequest,
     context: { params: Promise<{ id: string }> }
 ) {
-
-    const body = await req.json()
-
+    
     const { id } = await context.params
 
+    const payload = await getMultiQuestionApi({ req, id });
 
-    const payload = await putSingleQuestionAction({ req, body, id });
-
-    return NextResponse.json(payload, {
-        status: payload.status ? 200 : 400
-    });
-
+    return NextResponse.json(payload);
 }
-
-

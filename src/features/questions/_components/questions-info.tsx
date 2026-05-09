@@ -5,95 +5,323 @@ import { Label } from '@/src/shared/components/ui/label'
 import { cn } from '@/src/shared/lib/utils'
 import { CheckCheck, CheckIcon, CopyPlus, Loader2, Plus, SaveIcon, Trash2, X } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
-import { Answer, ExamQuestion } from '../types/questions'
+import { useEffect, useState } from 'react'
+import { Answer, ExamQuestion, IQueItem } from '../types/questions'
 import { ExamsCombobox } from './ExamsCombobox'
-import { useCreateSingleQuestion } from '../hooks/use-question'
+import { useCreateMultiBulkQuestion, useCreateSingleQuestion, useGetQuestions, useUpdateSingleQuestion } from '../hooks/use-question'
 import { toast } from 'sonner'
+import QuestionBulkMode from './questionBulkMode'
 
 
 const QuestionsInfo = ({ id, diplomaId }: { id: string, diplomaId: string }) => {
 
-    
-    
-    
     const [bulkMode, setBulkMode] = useState(false)
-    const [question, setQuestion] = useState<ExamQuestion>({
+    const [singleQuestion, setSingleQuestion] = useState<ExamQuestion>({
+        id: "",
         text: '',
+        examId: id,
+        immutable: false,
         answers: [],
+        isNew: true,
     })
     const [newAnswerText, setNewAnswerText] = useState('')
     const [showNewAnswerInput, setShowNewAnswerInput] = useState(false)
     const [selectExamId, setSelectExamId] = useState<string>(id || "");
-    const { mutateAsync: createSingleQuestion, isPending } = useCreateSingleQuestion()
-    
+    const { mutateAsync: createSingleQuestion, isPending: isSinglePending } = useCreateSingleQuestion()
+    const { mutateAsync: createBulkQuestion, isPending: isBulkQuestionPending } = useCreateMultiBulkQuestion()
+    const { mutateAsync: updateSingleQuestion, isPending: isUpdateQuestionPending } = useUpdateSingleQuestion()
+
+    const [multiQuestion, setMultiQuestion] = useState<IQueItem[]>([])
+    const [originalQuestions, setOriginalQuestions] =
+        useState<IQueItem[]>([])
+
+    console.log("RENDER FORM COM QUESTION INFO")
+
+
 
     const handleAddAnswer = () => {
-        if (newAnswerText.trim() === '') return
+        if (newAnswerText.trim() === "")
+            return
+
         const newAnswer: Answer = {
             id: Date.now().toString(),
             text: newAnswerText,
             isCorrect: false,
         }
 
-        setQuestion({
-            ...question,
-            answers: [...question.answers, newAnswer],
-        })
+        const updatedQuestion = {
+            ...singleQuestion,
+            examId: id,
+            immutable: false,
+            answers: [
+                ...singleQuestion.answers,
+                newAnswer,
+            ],
+        }
 
-        setNewAnswerText('')
+        setSingleQuestion(updatedQuestion)
+
+        if (bulkMode) {
+            setMultiQuestion((prev) =>
+                prev.map((q) =>
+                    q.id === updatedQuestion.id
+                        ? updatedQuestion
+                        : q
+                )
+            )
+        }
+
+        setNewAnswerText("")
         setShowNewAnswerInput(false)
     }
 
-    const handleRemoveAnswer = (id: string) => {
-        setQuestion({
-            ...question,
-            answers: question.answers.filter((a) => a.id !== id),
-        })
+ const handleRemoveAnswer = (answerId: string) => {
+
+    const updatedQuestion = {
+        ...singleQuestion,
+        answers: singleQuestion.answers.filter(
+            (a) => a.id !== answerId
+        ),
     }
 
-    const handleMarkCorrect = (id: string) => {
-        setQuestion({
-            ...question,
-            answers: question.answers.map((a) => ({
-                ...a,
-                isCorrect: a.id === id,
-            })),
-        })
+    setSingleQuestion(updatedQuestion)
+
+    if (bulkMode) {
+        setMultiQuestion((prev) =>
+            prev.map((q) =>
+                q.id === updatedQuestion.id
+                    ? updatedQuestion
+                    : q
+            )
+        )
+    }
+}
+const handleMarkCorrect = (answerId: string) => {
+
+    const updatedQuestion = {
+        ...singleQuestion,
+        answers: singleQuestion.answers.map((a) => ({
+            ...a,
+            isCorrect: a.id === answerId,
+        })),
     }
 
-    const hasCorrectAnswer = question.answers.some((a) => a.isCorrect)
-    const canAddMore = question.answers.length < 4
+    setSingleQuestion(updatedQuestion)
 
-    const handleCreateSingleQuestion = async () => {
-
-        if (question.text.trim() === '') {
-            toast.error('Please enter question headline')
-            return
-        }
-        if (!hasCorrectAnswer) {
-            toast.error('Please select a correct answer')
-            return
-        }
-        if (question.answers.length  <= 1) {
-            toast.error('Please add more answers')
-            return
-        }
-
-        await createSingleQuestion({ values: {
-            text: question.text,
-            answers: question.answers.map((a) => ({
-                text: a.text,
-                isCorrect: a.isCorrect,
-            })),
-        }, id })
-
-        toast.success('Question created successfully')
-        setQuestion({
-            text: '',
-            answers: [],
-        })
+    if (bulkMode) {
+        setMultiQuestion((prev) =>
+            prev.map((q) =>
+                q.id === updatedQuestion.id
+                    ? updatedQuestion
+                    : q
+            )
+        )
     }
+}
+    const hasCorrectAnswer = singleQuestion.answers.some((a) => a.isCorrect)
+    const canAddMore = singleQuestion.answers.length < 4
+
+    const handleSaveQuestions = async () => {
+        // SINGLE MODE
+       if (!bulkMode) {
+            // SINGLE MODE (CREATE OR UPDATE)
+            if (singleQuestion.text.trim() === "") {
+                toast.error("Please enter question headline")
+                return
+            }
+
+            if (!hasCorrectAnswer) {
+                toast.error("Please select a correct answer")
+                return
+            }
+
+            if (singleQuestion.answers.length < 2) {
+                toast.error("Please add more answers")
+                return
+            }
+
+            // لو مفيش ID → CREATE
+            if (singleQuestion.isNew) {
+                await createSingleQuestion({
+                    values: {
+                        text: singleQuestion.text,
+                        answers: singleQuestion.answers.map(a => ({
+                            text: a.text,
+                            isCorrect: a.isCorrect,
+                        })),
+                    },
+                    id,
+                })
+
+                console.log("createSingleQuestion .")
+
+                toast.success("Question created successfully")
+            } 
+            // لو فيه ID → UPDATE
+            else {
+                await updateSingleQuestion({
+                    id: singleQuestion.id,
+                    values: {
+                        text: singleQuestion.text,
+                        answers: singleQuestion.answers.map(a => ({
+                            text: a.text,
+                            isCorrect: a.isCorrect,
+                        })),
+                    },
+                })
+
+                console.log("updateSingleQuestion")
+
+                toast.success("Question updated successfully")
+            }
+
+            return
+        }
+
+
+        // BULK MODE
+        try {
+            // NEW QUESTIONS
+            const newQuestions =
+                multiQuestion.filter(
+                    (q) => q.isNew
+                )
+
+            // EXISTING QUESTIONS
+            const existingQuestions =
+                multiQuestion.filter(
+                    (q) => !q.isNew
+                )
+
+            // UPDATED QUESTIONS ONLY
+            const updatedQuestions =
+                existingQuestions.filter((q) => {
+
+                    const original =
+                        originalQuestions.find(
+                            (o) => o.id === q.id
+                        )
+
+                    if (!original) {
+                        return false
+                    }
+
+                    return (
+                        original.text !== q.text ||
+
+                        JSON.stringify(
+                            original.answers
+                        ) !==
+                        JSON.stringify(
+                            q.answers
+                        )
+                    )
+                })
+
+            // =========================
+            // SINGLE CREATE
+            // =========================
+
+            if (newQuestions.length === 1) {
+
+                await createSingleQuestion({
+                    values: {
+                        text:
+                            newQuestions[0].text,
+                        answers:
+                            newQuestions[0].answers.map(
+                                (a) => ({
+                                    text: a.text,
+                                    isCorrect:
+                                        a.isCorrect,
+                                })
+                            ),
+                    },
+
+                    id,
+                })
+                toast.success(
+                    "Question created successfully"
+                )
+            }
+
+            // ** BULK CREATE
+
+            if (newQuestions.length > 1) {
+                const payloadBulk = newQuestions.map((q) => ({
+                    text: q.text,
+                    answers:
+                        q.answers.map(
+                            (a) => ({
+                                text: a.text,
+                                isCorrect:
+                                    a.isCorrect,
+                            })
+                        ),
+                }))
+                await createBulkQuestion({
+                    values: {
+                        questions : payloadBulk
+                    },
+                    id
+                })
+
+                console.log(newQuestions)
+
+                toast.success(
+                    "Bulk questions created"
+                )
+            }
+
+            // UPDATE QUESTIONS
+            console.log("UPDATE QUESTIONS" , updatedQuestions)
+            if (updatedQuestions.length > 0) {
+
+                await Promise.all(
+
+                    updatedQuestions.map(
+                        async (question) => {
+
+                            await updateSingleQuestion({
+                                id: question.id,
+
+                                values : {
+                                    text: question.text,
+                                    answers: question.answers.map((a) => ({
+                                        text: a.text,
+                                        isCorrect: a.isCorrect,
+                                    })),
+                                }
+                            })
+
+                            console.log(
+                                "UPDATED",
+                                question
+                            )
+                        }
+                    )
+                )
+
+                toast.success(
+                    "Questions updated"
+                )
+            }
+
+        } catch (error) {
+
+            console.log(error)
+
+            toast.error(
+                "Something went wrong"
+            )
+        }
+
+
+
+    }
+
+
+
 
     return (
         <>
@@ -110,8 +338,8 @@ const QuestionsInfo = ({ id, diplomaId }: { id: string, diplomaId: string }) => 
                         Cancel
                     </Link>
 
-                    <Button disabled={isPending} onClick={handleCreateSingleQuestion} type='submit' className='bg-emerald-500 text-white text-sm font-mono'>
-                        {isPending ? <>
+                    <Button disabled={isSinglePending} onClick={handleSaveQuestions} type='submit' className='bg-emerald-500 text-white text-sm font-mono'>
+                        {isSinglePending ? <>
                             <Loader2 className='size-4 animate-spin' />
                             <SaveIcon />
                             Save
@@ -135,7 +363,7 @@ const QuestionsInfo = ({ id, diplomaId }: { id: string, diplomaId: string }) => 
                         {!bulkMode && (
                             <div className='space-y-2'>
                                 <Label >Question Headline</Label>
-                                <Input value={question.text} onChange={(e) => setQuestion({ ...question, text: e.target.value })} />
+                                <Input value={singleQuestion.text} onChange={(e) => setSingleQuestion({ ...singleQuestion, text: e.target.value })} />
                             </div>
                         )}
                     </div>
@@ -145,6 +373,7 @@ const QuestionsInfo = ({ id, diplomaId }: { id: string, diplomaId: string }) => 
                     <div className="bg-blue-600 text-white px-4">
                         Questions
                     </div>
+                    {bulkMode && <QuestionBulkMode id={id} multiQuestion={multiQuestion} setMultiQuestion={setMultiQuestion} singleQuestion={singleQuestion} setSingleQuestion={setSingleQuestion} setOriginalQuestions={setOriginalQuestions} />}
 
                     <div className='flex '>
                         <div className='flex-1'>
@@ -169,7 +398,7 @@ const QuestionsInfo = ({ id, diplomaId }: { id: string, diplomaId: string }) => 
                                 {/* Existing Answers */}
                                 <div>
                                     <div className="space-y-0 bg-white">
-                                        {question.answers.map((answer) => (
+                                        {singleQuestion.answers.map((answer) => (
                                             <div
                                                 key={answer.id}
                                                 className="flex items-center justify-between"

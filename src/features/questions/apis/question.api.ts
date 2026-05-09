@@ -1,5 +1,5 @@
 import { IApiResponse, IErrorResponse } from "@/src/shared/lib/types/api"
-import { ExamQuestion, IPayloadSubmissions, IQuestion, IQuestionInfo, IResponseSubmissions } from "../types/questions"
+import { ExamQuestion, IPayloadSubmissions, IQueItem, IQuestionBulk, IQuestionInfo, IQuestionUpdate, IResponseSubmissions } from "../types/questions"
 import { HEADERS } from "@/src/shared/constant/api.constant"
 import { getNextAuthToken } from "../../auth/util/auth.util"
 import { getToken } from "next-auth/jwt"
@@ -15,7 +15,7 @@ export const getQuestionsApi = async (
         sortBy?: "title" | "createdAt";
         sortOrder?: "asc" | "desc";
     }
-): Promise<IQuestion> => {
+): Promise<IQueItem[]> => {
 
     let token = await getNextAuthToken();
     
@@ -46,16 +46,14 @@ export const getQuestionsApi = async (
         }
     );
 
-    const data: IApiResponse<IQuestion> = await res.json();
+    const data: IApiResponse<{questions : IQueItem[]}> = await res.json();
 
     if (!data.status) {
         throw new Error(data.message || "Something went wrong");
     }
 
-    return data.payload as IQuestion;
+    return data.payload.questions as IQueItem[];
 };
-
-
 export const getSingleQuestionApi = async (questionId: string) => {
 
     const token = await getNextAuthToken();
@@ -74,6 +72,28 @@ export const getSingleQuestionApi = async (questionId: string) => {
         throw new Error(data.message || "Something went wrong");
     }
     return data.payload as IQuestionInfo
+}
+
+export const getMultiQuestionApi = async ({ req, id}: { req: NextRequest; id: string;}) => {
+
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized 
+
+    const res = await fetch(`${process.env.API_URL}/questions/exam/${id}`, {
+        headers: {
+            ...HEADERS.authorize(token.token)
+        }
+    })
+
+    const data: IApiResponse<{questions : IQueItem[]}> = await res.json()
+
+    
+    if (!data.status) {
+        throw new Error(data.message || "Something went wrong");
+    }
+    console.log("DATA QUE :", data.payload.questions[0].answers)
+    return data as IApiResponse<{questions : IQueItem[]}>
 }
 
 
@@ -98,6 +118,29 @@ export const postSingleQuestionAction = async ({ req, body, id }: { req: NextReq
     }
     return data as IApiResponse<IQuestionInfo>
 }
+export const postMultiBulkQuestionAction = async ({ req, body, id }: { req: NextRequest; body: IQuestionBulk; id: string }) => {
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized
+
+    const res = await fetch(`${process.env.API_URL}/questions/exam/${id}/bulk`, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+            ...HEADERS.authorize(token.token),
+            ...HEADERS.JsonBody
+        }
+    })
+
+    const data: IApiResponse<IQuestionInfo> = await res.json()
+
+    if (!data.status) {
+        return data as IErrorResponse
+    }
+    return data as IApiResponse<IQuestionInfo>
+}
+
+
 
 export const postSubmissions = async ({ req, body }: { req: NextRequest; body: IPayloadSubmissions; }) => {
 
@@ -125,4 +168,27 @@ export const postSubmissions = async ({ req, body }: { req: NextRequest; body: I
         } as IErrorResponse;
     }
     return data.payload as IResponseSubmissions
+}
+
+
+export const putSingleQuestionAction = async ({ req, body, id }: { req: NextRequest; body: IQuestionUpdate; id: string }) => {
+    const token = await getToken({ req });
+
+    if (!token) return RESPONSES.unauthorized
+
+    const res = await fetch(`${process.env.API_URL}/questions/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(body),
+        headers: {
+            ...HEADERS.authorize(token.token),
+            ...HEADERS.JsonBody
+        }
+    })
+
+    const data: IApiResponse<IQuestionInfo> = await res.json()
+
+    if (!data.status) {
+        return data as IErrorResponse
+    }
+    return data as IApiResponse<IQuestionInfo>
 }

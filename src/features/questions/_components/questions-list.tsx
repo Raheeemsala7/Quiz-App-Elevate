@@ -24,7 +24,7 @@ const QuestionsList = async ({ id, title, searchParams }: IProps) => {
 
     return (
         <div>
-            {questions.questions.map((que) => (
+            {questions.map((que) => (
                 <div className='bg-white px-4 py-2.5 flex justify-between' key={que.id}>
                     <p className='text-sm flex-1'>{que.text}</p>
 
@@ -49,7 +49,7 @@ const QuestionsList = async ({ id, title, searchParams }: IProps) => {
 
                                     <MenubarItem asChild>
                                         <Link
-                                            href={`/exams/${id}/${slugify(title, { lower: false })}/question/${que.id}/edit`}
+                                            href={`/exams/${id}/${slugify(title, { lower: false })}/question/${slugify(que.text, { lower: false })}/${que.id}/edit`}
                                             className="flex items-center gap-2"
                                         >
                                             <Pencil className="h-4 w-4 text-blue-500" />

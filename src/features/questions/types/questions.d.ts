@@ -1,19 +1,19 @@
 import { Timestamp } from "next/dist/server/lib/cache-handlers/types";
 
-export interface IQuestion extends Timestamp {
-    questions: {
-        id: string
-        text: string
-        examId: string
-        immutable: true,
-        answers: IAnswer[]
-    }[]
-}
+// export interface IQuestion extends Timestamp {
+//     questions: {
+//         id: string
+//         text: string
+//         examId: string
+//         immutable: true,
+//         answers: IAnswer[]
+//     }[]
+// }
 
 interface IAnswer {
     id: string
     text: string
-    isCorrect?: boolean
+    isCorrect: boolean
 }
 
 
@@ -21,8 +21,9 @@ export interface IQueItem {
     id: string
     text: string
     examId: string
-    immutable: true,
-    answers: IAnswer[]
+    immutable: boolean,
+    answers: IAnswer[];
+    isNew?: boolean;
 }
 
 
@@ -105,12 +106,33 @@ export interface IQuestionInfo {
 
 
 export interface Answer {
-    id?: string
+    id: string
     text: string
     isCorrect: boolean
 }
 
 interface ExamQuestion {
+    id: string
+    text: string
+    examId: string
+    immutable: boolean,
+    answers: Answer[]
+    isNew?: boolean
+}
+
+
+interface IQuestionBulk {
+    questions: {
+        text: string
+        answers: {
+            text: string
+            isCorrect: boolean
+        }[]
+    }[]
+}
+
+export interface IQuestionUpdate {
+    id: string
     text: string
     answers: Answer[]
 }

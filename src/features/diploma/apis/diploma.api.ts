@@ -5,7 +5,6 @@ import { getToken } from "next-auth/jwt";
 import { RESPONSES } from "@/src/shared/constant/api.responses";
 import { IDiploma } from "../types/diploma";
 import { getNextAuthToken } from "../../auth/util/auth.util";
-import { UploadImageType } from "@/src/shared/lib/schema/image.schema";
 import { CreateDiplomaType } from "../schema/diploma.schema";
 
 
